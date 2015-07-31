@@ -1,0 +1,11 @@
+OVERVIEW:
+1. A match is made between two players
+2. One of the players (the master client, for whom PhotonNetwork.isMasterclient == true is selected as host
+3. The host generates generates an RNG seed and sends it to the client. This is the host's sole responsibility.
+4. Each player deterministically generates the map using this seed.
+while game is not over:
+	5. Players take their turns locally. Their inputs are logged. [1]
+	6. Players exchange inputs, and run each other's turns locally. So each player has a complete copy of the game, updating in lockstep.
+	
+	
+[1] In one design, players immediately see the consequences of their actions, therefore  players' experiences might disagree on the final turn of the game (each would see him/herself dig out tile X, and only _then_ see the other player dig out the same tile). Resources gained during the final turn would probably be retroactviely lost.
