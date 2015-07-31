@@ -40,7 +40,7 @@ public class Matchmaker : Photon.PunBehaviour
 			if (PhotonNetwork.isMasterClient) {
 				// And we're in charge. Generate an RNG seed, and have everyone generate the map
 				debug = "Game started; am master";
-				photonView.RPC("GenerateMap", Random.Range(int.MinValue, int.MaxValue););
+				photonView.RPC("GenerateMap", Random.Range(int.MinValue, int.MaxValue));
 			}
 		else
 				debug = "Game started; not the master";		
