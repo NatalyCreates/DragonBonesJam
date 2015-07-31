@@ -48,40 +48,24 @@ public class MapGenerator : MonoBehaviour {
 
 
 		CreateFirstTile();
-
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
-		AddTileRight();
-		AddTileRight();
-		AddTileRight();
-		AddTileRight();
-
 		RepositionPointer();
-
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
-		AddTileRight();
-		AddTileRight();
-		AddTileRight();
-
 		RepositionPointer();
-
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();
-		AddTileRight();
-		AddTileRight();
-
 		RepositionPointer();
-		
 		AddTileRight();
 		AddTileRight();
 		AddTileRight();

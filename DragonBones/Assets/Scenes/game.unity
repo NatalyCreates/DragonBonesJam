@@ -185,6 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: _
+  dragSpeedCoefficient: 1
 --- !u!1001 &1047821335
 Prefab:
   m_ObjectHideFlags: 0
@@ -223,10 +224,6 @@ Prefab:
     - target: {fileID: 470270, guid: 42d06d27eccfb5b4686dd467cc34d1ed, type: 2}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9248268, guid: 42d06d27eccfb5b4686dd467cc34d1ed, type: 2}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 42d06d27eccfb5b4686dd467cc34d1ed, type: 2}
