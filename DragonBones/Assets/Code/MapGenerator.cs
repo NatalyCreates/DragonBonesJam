@@ -38,7 +38,7 @@ public class MapGenerator : MonoBehaviour {
 
 	List<int> tileMap =  new List<int>();
 
-
+	Tile tileScriptRef;
 
 	// Use this for initialization
 	void Start () {
@@ -54,7 +54,7 @@ public class MapGenerator : MonoBehaviour {
 		Debug.Log("Running GenerateMap with seed " + seed);
 
 		//seed = 1358043;
-		//Random.seed = seed;
+		Random.seed = seed;
 		//float width = (float)Random.Range(2, 5);
 
 		//Debug.Log("seed = " + Random.seed);
@@ -66,37 +66,49 @@ public class MapGenerator : MonoBehaviour {
 
 		//mapSize = 25;
 		//tileX = 0;
-		int firstRowLen = 2;
+		//int firstRowLen = 2;
 		//int totalTilesPerRow = firstRowTileNum;
-		int nextRowLen;
-		int totalRows = 6;
+		//int nextRowLen;
+		int rowLen = 30;
+		int totalRows = 30;
 		int curRow, curTile;
 		float x = 0;
 		float y = 0;
+		float midxpos = 0, midypos = 0;
+		int rowThing = 0;
 		for (curRow = 0; curRow < totalRows; curRow++) {
+			xpos = 0 - ((curRow) * tileWidth / 2);
+			ypos = 0 - ((curRow) * tileWidth / 4);
+
+			/*
 			if (curRow < totalRows / 2) {
-				nextRowLen = firstRowLen * (curRow + 1);
-				xpos = 0 - ((curRow) * tileWidth / 2) - (curRow * 128);
-				ypos = 0 - ((curRow) * tileWidth / 4) + (curRow * 64);
+				//nextRowLen = firstRowLen * (curRow + 1);
+				//xpos = 0 - ((curRow) * tileWidth / 2) - (curRow * 128);
+				//ypos = 0 - ((curRow) * tileWidth / 4) + (curRow * 64);
+				//rowThing++;
+				//Debug.Log("rowThing is " + rowThing.ToString());
 			}
 			else {
-				nextRowLen = firstRowLen * (totalRows - curRow);
-				xpos = 0 - ((curRow) * tileWidth / 2) + (curRow * 128);
-				ypos = 0 - ((curRow) * tileWidth / 4) - (curRow * 64);
-			}
+				//nextRowLen = firstRowLen * (totalRows - curRow);
+				//xpos = xpos + ((totalRows - curRow) * tileWidth / 2) + ((rowThing) * 128);
+				//xpos = 0 - ((curRow - 1) * tileWidth / 2) + ((rowThing) * 128);
+				//ypos = 0 - ((curRow) * tileWidth / 4) - ((curRow) * 64);
+				//rowThing--;
+				//Debug.Log("rowThing is " + rowThing.ToString());
+			}*/
 
-			Debug.Log("next row has " + nextRowLen.ToString() + " tiles");
+			//Debug.Log("next row has " + nextRowLen.ToString() + " tiles");
 
 			//xpos = 0 - ((curRow + 1) * tileWidth / 2);
 			//Debug.Log("xpos, ypos = " + xpos.ToString() + ", " + ypos.ToString());
 			//xpos = 0 - ((curRow - 1) * tileWidth / 2) - (tileWidth / 2)*curRow;
 			//ypos = 0 - ((curRow - 1) * tileWidth / 4) + (tileWidth / 4)*curRow;
 			//Debug.Log("xpos, ypos = " + xpos.ToString() + ", " + ypos.ToString());
-			for (curTile = 0; curTile < nextRowLen; curTile++) {
+			for (curTile = 0; curTile < rowLen; curTile++) {
 				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
 				x = xpos + (curTile * tileWidth / 2);
 				y = ypos - (curTile * tileHeight / 4);
-				Debug.Log(x.ToString() + ", " + y.ToString());
+				//Debug.Log(x.ToString() + ", " + y.ToString());
 				AddTile(x, y);
 			}
 		}
