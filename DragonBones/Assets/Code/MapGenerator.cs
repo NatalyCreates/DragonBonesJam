@@ -3,16 +3,43 @@ using System.Collections;
 
 public class MapGenerator : MonoBehaviour {
 
+	public GameObject tilePrefab;
+
+	float tileSizeX = 256.0f;
+	float tileSizeY = 256.0f;
+
 	// Use this for initialization
 	void Start () {
-	
+
+		GenerateMap(1);
 	}
 
 	[PunRPC]
 	void GenerateMap (int seed) {
-		seed = 1358043;
-		Random.seed = seed;
 
+		Debug.Log("Running GenerateMap with seed " + seed);
+		//seed = 1358043;
+		//Random.seed = seed;
+
+		//Debug.Log("seed = " + Random.seed);
+		// Make sure to preserve the order of random generation
+
+		GameObject newTile;
+
+		float xpos = 500;
+		float ypos = -500;
+		Vector2 position = new Vector2(xpos, ypos);
+
+		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
+		newTile.transform.parent = gameObject.transform;
+
+		xpos = xpos + (-1) * tileSizeX/2;
+		ypos = ypos + tileSizeY/4;
+		position.x = xpos;
+		position.y = ypos;
+
+		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
+		newTile.transform.parent = gameObject.transform;
 
 
 	}
