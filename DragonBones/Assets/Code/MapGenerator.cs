@@ -4,26 +4,24 @@ using System.Collections;
 public class MapGenerator : MonoBehaviour {
 
 	GameObject tilePrefab;
-	public GameObject tilePrefab0;
 	public GameObject tilePrefab1;
 	public GameObject tilePrefab2;
+	public GameObject tilePrefab3;
+	public GameObject tilePrefab4;
+	public GameObject tilePrefab5;
+	public GameObject tilePrefab6;
+	public GameObject tilePrefab7;
+	public GameObject tilePrefab8;
 
-	//float tileSizeX = 256.0f;
-	//float tileSizeY = 256.0f;
+	float tileSizeX = 256.0f;
+	float tileSizeY = 256.0f;
 
-	int tileSizeX = 256;
-	int tileSizeY = 256;
-
-	//float xpos;
-	int xpos;
-	//float ypos;
-	int ypos;
+	float xpos;
+	float ypos;
 	Vector2 position;
-
 	GameObject newTile;
 
 	int sortingCount = 0;
-
 	int rows = 0;
 
 	// Use this for initialization
@@ -102,19 +100,7 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	void CreateFirstTile () {
-		int tile = Random.Range (2,4);
-		Debug.Log ("rand tile is " + tile);
-		switch (tile) {
-		case 1:
-			tilePrefab = tilePrefab0;
-			break;
-		case 2:
-			tilePrefab = tilePrefab1;
-			break;
-		case 3:
-			tilePrefab = tilePrefab2;
-			break;
-		}
+		PickRandomTile();
 		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
 		newTile.transform.parent = gameObject.transform;
 		SetSortingAndIncOrder();
@@ -124,43 +110,46 @@ public class MapGenerator : MonoBehaviour {
 		newTile.GetComponent<SpriteRenderer>().sortingOrder = sortingCount;
 		sortingCount++;
 	}
-	/*
-	void AddTileTopLeft () {
-		xpos = xpos + (-1) * tileSizeX/2;
-		ypos = ypos + tileSizeY/4;
-		position.x = xpos;
-		position.y = ypos;
-		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
-		newTile.transform.parent = gameObject.transform;
-	}*/
-	/*
-	void AddTileLeft () {
-		xpos = xpos - tileSizeX/2;
-		ypos = ypos - tileSizeY/4;
-		position.x = xpos;
-		position.y = ypos;
-		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
-		newTile.transform.parent = gameObject.transform;
-		SetSortingAndIncOrder();
-	}*/
 
-	void AddTileRight () {
-		int tile = Random.Range (2,4);
+	void PickRandomTile () {
+		int tile = Random.Range (1,9);
 		switch (tile) {
 		case 1:
-			tilePrefab = tilePrefab0;
-			break;
-		case 2:
 			tilePrefab = tilePrefab1;
 			break;
-		case 3:
+		case 2:
 			tilePrefab = tilePrefab2;
 			break;
+		case 3:
+			tilePrefab = tilePrefab3;
+			break;
+		case 4:
+			tilePrefab = tilePrefab4;
+			break;
+		case 5:
+			tilePrefab = tilePrefab5;
+			break;
+		case 6:
+			tilePrefab = tilePrefab6;
+			break;
+		case 7:
+			tilePrefab = tilePrefab7;
+			break;
+		case 8:
+			tilePrefab = tilePrefab8;
+			break;
+		default:
+			tilePrefab = tilePrefab1;
+			break;
 		}
+	}
+
+	void AddTileRight () {
+		PickRandomTile();
 		xpos = xpos + tileSizeX/2;
 		ypos = ypos - tileSizeY/4;
-		position.x = (float) xpos;
-		position.y = (float) ypos;
+		position.x = xpos;
+		position.y = ypos;
 		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
 		newTile.transform.parent = gameObject.transform;
 		SetSortingAndIncOrder();
