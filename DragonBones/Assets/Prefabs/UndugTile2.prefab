@@ -9,6 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 459478}
   - 212: {fileID: 21276456}
+  - 114: {fileID: 11408580}
+  - 60: {fileID: 6034700}
   m_Layer: 0
   m_Name: UndugTile2
   m_TagString: Untagged
@@ -28,6 +30,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!60 &6034700
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 131214}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+    m_Paths:
+    - - {x: .671836853, y: -195.451477}
+      - {x: 131.738937, y: -259.089844}
+      - {x: 256.349304, y: -194.829071}
+      - {x: 257.153839, y: -64.8845444}
+      - {x: 128.706055, y: -.111194611}
+      - {x: .803623199, y: -65.9271011}
+--- !u!114 &11408580
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 131214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2383701d03e2c4c9e7a899aac7b4d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &21276456
 SpriteRenderer:
   m_ObjectHideFlags: 1

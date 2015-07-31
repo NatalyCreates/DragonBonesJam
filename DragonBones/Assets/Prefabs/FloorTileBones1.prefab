@@ -9,6 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 442422}
   - 212: {fileID: 21271888}
+  - 114: {fileID: 11400708}
+  - 60: {fileID: 6020566}
   m_Layer: 0
   m_Name: FloorTileBones1
   m_TagString: Untagged
@@ -28,6 +30,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!60 &6020566
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123384}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+    m_Paths:
+    - - {x: 126.632347, y: -259.623596}
+      - {x: 258.619934, y: -194.332062}
+      - {x: 127.591042, y: -128.759308}
+      - {x: -1.50526428, y: -193.484222}
+--- !u!114 &11400708
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2383701d03e2c4c9e7a899aac7b4d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &21271888
 SpriteRenderer:
   m_ObjectHideFlags: 1
