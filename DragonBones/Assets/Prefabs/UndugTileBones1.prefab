@@ -10,8 +10,6 @@ GameObject:
   - 4: {fileID: 442226}
   - 212: {fileID: 21299878}
   - 114: {fileID: 11498066}
-  - 58: {fileID: 5820302}
-  - 61: {fileID: 6168170}
   - 60: {fileID: 6017748}
   m_Layer: 0
   m_Name: UndugTileBones1
@@ -32,19 +30,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!58 &5820302
-CircleCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155736}
-  m_Enabled: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_Offset: {x: 128, y: -128}
-  serializedVersion: 2
-  m_Radius: 128
 --- !u!60 &6017748
 PolygonCollider2D:
   m_ObjectHideFlags: 1
@@ -64,19 +49,6 @@ PolygonCollider2D:
       - {x: 257.153839, y: -64.8845444}
       - {x: 128.706055, y: -.111194611}
       - {x: .803623199, y: -65.9271011}
---- !u!61 &6168170
-BoxCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 155736}
-  m_Enabled: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_Offset: {x: 128, y: -128}
-  serializedVersion: 2
-  m_Size: {x: 256, y: 256}
 --- !u!114 &11498066
 MonoBehaviour:
   m_ObjectHideFlags: 1
