@@ -9,7 +9,7 @@ public class Ui : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Basics.assert(!instance);
+		//Basics.assert(!instance);
 		instance = this;
 	}
 
@@ -28,7 +28,7 @@ public class Ui : MonoBehaviour {
 					// TODO: raycast or raycastAll
 					var ray = Camera.main.ScreenPointToRay (touch.position);
 				}*/
-				summary += string.Format("{}: {} ({})\n", touch.fingerId.ToString(), touch.phase, touch.position);
+				summary += string.Format("{0}: {1} ({1})\n", touch.fingerId.ToString(), touch.phase, touch.position);
 			}
 		
 			Ui.instance.debug = summary;
