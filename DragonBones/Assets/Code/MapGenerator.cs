@@ -11,7 +11,7 @@ public class MapGenerator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		GenerateMap(1);
+		//GenerateMap(1);
 	}
 
 	[PunRPC]
