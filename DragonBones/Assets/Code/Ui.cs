@@ -26,6 +26,18 @@ public class Ui : MonoBehaviour {
 		GUILayout.Label(debug);
 	}
 
+	public void TryMoveCamera(Vector3 delta) {
+		var viewportSize = new Vector2(Camera.main.orthographicSize, 0);
+		viewportSize.y = (viewportSize.x * Screen.width) / Screen.height;
+
+		var position = Camera.main.transform.position + delta;
+		position.x = Mathf.Clamp(Camera.main.transform.position.x, viewportSize.x, 
+		                                               DragonGame.instance.mapBounds.x - viewportSize.x);
+		position.y = Mathf.Clamp(Camera.main.transform.position.y, viewportSize.y, 
+		                                               DragonGame.instance.mapBounds.y - viewportSize.y);
+		Camera.main.transform.position = position;
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.touches.Length > 0) {
@@ -37,7 +49,7 @@ public class Ui : MonoBehaviour {
 					wasDragged.Add(touch.fingerId);
 
 					var delta = touch.deltaPosition * dragSpeedCoefficient;
-					Camera.main.transform.position -= new Vector3(delta.x, delta.y, 0);
+					TryMoveCamera(-new Vector3(delta.x, delta.y, 0));
 				}
 				else if (touch.phase == TouchPhase.Ended) {
 					if (wasDragged.Contains(touch.fingerId)) {
@@ -45,12 +57,16 @@ public class Ui : MonoBehaviour {
 						wasDragged.Remove(touch.fingerId);
 					} else {
 						// Looks like a tap
+						bool hitSomething = false; // RaycastHit2D is a struct; can't be null
 						RaycastHit2D hit;
 						var hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(touch.position), Vector2.zero);
-						if (hits.Length == 1)
+						if (hits.Length == 1) {
 							hit = hits[0];
+							hitSomething = true;
+						}
 						else if (hits.Length > 1) {
 							// Multiple tiles clicked, pick the one in front (based on draw order)
+							hitSomething = true;
 							var bestLayer = -1;
 							foreach (var h in hits) {
 								var layer = h.collider.GetComponent<SpriteRenderer>().sortingOrder;
@@ -59,14 +75,20 @@ public class Ui : MonoBehaviour {
 									hit = h;
 								}
 							}
-						}												
+						}			
 
-						var tile = hit.collider.GetComponent<Tile>();
+						if (hitSomething) {
+							// We've clicked something
+							if (hit.collider.gameObject.tag == "endTurn")
+								// It's the end turn button
+								DragonGame.instance.EndTurn();
 
-						if (tile) {
-							// Tile clicked
-							Basics.log ("There was a TILE here. It's gone now.");
-							Destroy(tile.gameObject);
+							var tile = hit.collider.GetComponent<Tile>();
+
+							if (tile != null) {
+								// Tile clicked. At the moment, all we can do is dig
+								DragonGame.instance.ProcessAction(new Incantation(tile));
+							}
 						}
 					}
 				}

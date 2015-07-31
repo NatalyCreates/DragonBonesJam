@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Tile : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public bool diggable = true;
+	public bool dug = false;
+
+	public void Dig() {
+		// TODO: cool effects
+		Basics.assert(!dug);
+		dug = false;
+		gameObject.SetActive(false);
 	}
 }

@@ -8,7 +8,7 @@ public class Basics {
 			throw new UnityException(message);
 	}
 
-	public static void log(string message) {
+	public static void Log(string message) {
 		Debug.Log(message);
 		Ui.instance.debug = message;
 	}
