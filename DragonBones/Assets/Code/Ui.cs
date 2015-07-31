@@ -64,8 +64,9 @@ public class Ui : MonoBehaviour {
 				summary += string.Format("{0}: {1} ({2})\n", touch.fingerId.ToString(), touch.phase, touch.position);
 			}
 		
-			Basics.assert(wasDragged.Count <= Input.touches.Length);
-			//Ui.instance.debug = summary;
+			summary += "\nDrag count" + wasDragged.Count.ToString();
+			//Basics.assert(wasDragged.Count <= Input.touches.Length);
+			Ui.instance.debug = summary;
 		}
 	}
 
