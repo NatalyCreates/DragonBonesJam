@@ -26,9 +26,45 @@ public class Ui : MonoBehaviour {
 		keyboardScrollSpeed = 1000f;
 	}
 
+	public static Tile GetTile(GameObject obj) {
+		// Is the object a floor?
+		if (obj.tag == "floor") {
+			Basics.Log ("Tile floor clicked");
+			return obj.transform.parent.gameObject.GetComponent<Tile>();
+		}
+
+		// Nope. Might be a Tile
+		return obj.GetComponent<Tile>();
+	}
+
 	public void OnGUI()
 	{
 		GUILayout.Label(debug);
+	}
+
+	/// @return an index in the given array, -1 if nothing clickable
+	GameObject ThingClicked(Vector2 screenPos) {
+		var hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(screenPos), Vector2.zero);
+
+		if (hits.Length == 0)
+			return null;
+		if (hits.Length == 1) {
+			return hits[0].collider.gameObject;
+		}
+
+		// Multiple things clicked, pick the one in front (based on draw order)
+		var bestLayer = -1;
+		var result = -1;
+		for (int i = 0; i < hits.Length; ++i) {
+			var h = hits[i];
+			var layer = h.collider.GetComponent<SpriteRenderer>().sortingOrder;
+			if (layer > bestLayer) {
+				bestLayer = layer;
+				result = i;
+			}
+		}
+					
+		return hits[result].collider.gameObject;
 	}
 
 	public void TryMoveCamera(Vector3 delta) {
@@ -83,33 +119,15 @@ public class Ui : MonoBehaviour {
 
 			// Looks like a tap
 			Basics.Log ("Casting at " + clickPos.ToString());
-			bool hitSomething = false; // RaycastHit2D is a struct; can't be null
-			RaycastHit2D hit;
-			var hits = Physics2D.RaycastAll(clickPos, Vector2.zero);
-			if (hits.Length == 1) {
-				hit = hits[0];
-				hitSomething = true;
-			}
-			else if (hits.Length > 1) {
-				// Multiple tiles clicked, pick the one in front (based on draw order)
-				hitSomething = true;
-				var bestLayer = -1;
-				foreach (var h in hits) {
-					var layer = h.collider.GetComponent<SpriteRenderer>().sortingOrder;
-					if (layer > bestLayer) {
-						bestLayer = layer;
-						hit = h;
-					}
-				}
-			}			
+			var clicked = ThingClicked (clickPos);
 			
-			if (hitSomething) {
+			if (clicked != null) {
 				// We've clicked something
-				if (hit.collider.gameObject.tag == "endTurn")
+				if (clicked.tag == "endTurn")
 					// It's the end turn button
 					DragonGame.instance.EndTurn();
 				
-				var tile = hit.collider.GetComponent<Tile>();
+				Tile tile = GetTile(clicked);
 				
 				if (tile != null) {
 					// Tile clicked. At the moment, all we can do is dig
@@ -137,34 +155,16 @@ public class Ui : MonoBehaviour {
 						wasDragged.Remove(touch.fingerId);
 					} else {
 						// Looks like a tap
-						bool hitSomething = false; // RaycastHit2D is a struct; can't be null
-						RaycastHit2D hit;
-						var hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(touch.position), Vector2.zero);
-						if (hits.Length == 1) {
-							hit = hits[0];
-							hitSomething = true;
-						}
-						else if (hits.Length > 1) {
-							// Multiple tiles clicked, pick the one in front (based on draw order)
-							hitSomething = true;
-							var bestLayer = -1;
-							foreach (var h in hits) {
-								var layer = h.collider.GetComponent<SpriteRenderer>().sortingOrder;
-								if (layer > bestLayer) {
-									bestLayer = layer;
-									hit = h;
-								}
-							}
-						}			
+						var clicked = ThingClicked (touch.position);
 
-						if (hitSomething) {
+						if (clicked != null) {
 							// We've clicked something
-							if (hit.collider.gameObject.tag == "endTurn")
+							if (clicked.tag == "endTurn")
 								// It's the end turn button
 								DragonGame.instance.EndTurn();
 
-							var tile = hit.collider.GetComponent<Tile>();
-
+							Tile tile = GetTile (clicked);
+						
 							if (tile != null) {
 								// Tile clicked. At the moment, all we can do is dig
 								DragonGame.instance.ProcessAction(new Incantation(tile));
