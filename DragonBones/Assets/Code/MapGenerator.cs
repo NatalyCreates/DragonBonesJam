@@ -46,9 +46,8 @@ public class MapGenerator : MonoBehaviour {
 	GameObject newTile;
 
 	int sortingCount = 0;
-	int rows = 0;
 
-	List<int> tileMap =  new List<int>();
+	List<TileLayered> tileMap =  new List<TileLayered>();
 
 	//Tile tileScriptRef;
 
@@ -65,7 +64,6 @@ public class MapGenerator : MonoBehaviour {
 
 		for (curRow = 0; curRow < totalRows; curRow++) {
 			for (curTile = 0; curTile < rowLen; curTile++) {
-				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
 				xpos = xpos + (tileWidth / 2);
 				ypos = ypos - (tileHeight / 4);
 				AddTile(xpos, ypos);
