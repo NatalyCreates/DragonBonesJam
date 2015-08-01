@@ -22,7 +22,9 @@ public class MapGenerator : MonoBehaviour {
 		public int yInMap;
 		public int typeFloor;
 		public int typeWall;
-		public GameObject prefab;
+		public GameObject prefabFloor;
+		public GameObject prefabWall;
+		public GameObject prefabUnknown;
 	}
 
 	GameObject tilePrefab;
@@ -74,23 +76,73 @@ public class MapGenerator : MonoBehaviour {
 
 		// Make sure to preserve the order of random generation
 
-		int rowLen = 50;
-		int totalRows = 50;
+		//int rowLen = 6;
 
+		int totalRows = 10;
+
+		int firstRowLen = 4;
+		int nextRowLen = firstRowLen;
 		int curRow, curTile;
 
-		float x = 0;
-		float y = 0;
+		//float x = 0;
+		//float y = 0;
 
 		for (curRow = 0; curRow < totalRows; curRow++) {
-			xpos = 0 - ((curRow) * tileWidth / 2);
-			ypos = 0 - ((curRow) * tileWidth / 4);
-
-			for (curTile = 0; curTile < rowLen; curTile++) {
+			//xpos = 0 - ((curRow) * tileWidth / 2);
+			//ypos = 0 - ((curRow) * tileWidth / 4);
+			for (curTile = 0; curTile < nextRowLen; curTile++) {
 				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
-				x = xpos + (curTile * tileWidth / 2);
-				y = ypos - (curTile * tileHeight / 4);
-				AddTile(x, y);
+				xpos = xpos + (tileWidth / 2);
+				ypos = ypos - (tileHeight / 4);
+				AddTile(xpos, ypos);
+			}
+			// move pointer back to start
+			//xpos = (xpos - ((rowLen) * (tileWidth / 2))) - (tileWidth / 2);
+			//ypos = (ypos + ((rowLen) * (tileHeight / 4))) - (tileHeight / 4);
+			xpos = xpos - ((nextRowLen + 1) * (tileWidth / 2));
+			ypos = ypos + ((nextRowLen - 1) * (tileHeight / 4));
+
+			// even number of rows
+			if (totalRows % 2 == 0) {
+				Debug.Log("Even number of rows, totalRows/2 = " + totalRows/2);
+				// first half
+				if (curRow < totalRows/2 - 1) {
+					nextRowLen = nextRowLen + firstRowLen;
+					for (int i = 0; i < firstRowLen/2; i++) {
+						xpos = xpos - (tileWidth / 2);
+						ypos = ypos + (tileHeight / 4);
+					}
+				}
+				// first row of second half
+				else if (curRow == totalRows/2 - 1) {
+					nextRowLen = nextRowLen;
+					xpos = xpos;
+					ypos = ypos;
+				}
+				// second half
+				else {
+					nextRowLen = nextRowLen - firstRowLen;
+					for (int i = 0; i < firstRowLen/2; i++) {
+						xpos = xpos + (tileWidth / 2);
+						ypos = ypos - (tileHeight / 4);
+					}
+				}
+			}
+			// odd number of rows
+			else {
+				Debug.Log("Odd number of rows, totalRows/2 = " + totalRows/2); // rounded down
+				// first half
+				if (curRow < totalRows/2) {
+					xpos = xpos - (tileWidth / 2);
+					ypos = ypos + (tileHeight / 4);
+					nextRowLen = nextRowLen + firstRowLen;
+				}
+				// second half
+				else {
+					xpos = xpos + (tileWidth / 2);
+					ypos = ypos - (tileHeight / 4);
+					nextRowLen = nextRowLen - firstRowLen;
+				}
 			}
 		}
 
