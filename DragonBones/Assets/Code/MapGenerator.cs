@@ -2,15 +2,28 @@
 using System.Collections;
 using System.Collections.Generic;
 
-/*
-public class TileMap {
-
-}*/
-
-//struct TileMap
-
 
 public class MapGenerator : MonoBehaviour {
+
+	enum TileType {
+		FLOOR_DIG,
+		FLOOR_DIG_POWER,
+		FLOOR_ROOM,
+		WALL_DIG,
+		WALL_DIG_POWER,
+		WALL_ROOM,
+		WALL_DRAGON,
+		WALL_ROCK,
+		WALL_UNKOWN,
+	};
+	struct TileLayered {
+		private bool set;
+		public int xInMap;
+		public int yInMap;
+		public int typeFloor;
+		public int typeWall;
+		public GameObject prefab;
+	}
 
 	GameObject tilePrefab;
 	public GameObject tilePrefab1;
@@ -61,8 +74,8 @@ public class MapGenerator : MonoBehaviour {
 
 		// Make sure to preserve the order of random generation
 
-		int rowLen = 30;
-		int totalRows = 30;
+		int rowLen = 50;
+		int totalRows = 50;
 
 		int curRow, curTile;
 
