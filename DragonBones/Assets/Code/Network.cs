@@ -22,16 +22,24 @@ public class Network : Photon.PunBehaviour
 		PhotonNetwork.ConnectUsingSettings("0.1"); // version number
     }
 
-    public override void OnJoinedLobby()
-    {
+	public void EndGame() {
+		PhotonNetwork.Disconnect();
+		// TODO: back to main menu, option for new game
+	}
+
+
+    public override void OnJoinedLobby() {
 		// Lobby joined, join random room (on fail event, callback will create a room)
         PhotonNetwork.JoinRandomRoom();
 		// TODO: might want to consider proper, latency-conscious matchmaking, but the game's hardly realtime,
 		// so this doesn't really matter
     }
+
+	public override void OnJoinedRoom() {
+		OnPhotonPlayerConnected(null);
+	}
 	
-	public override void OnPhotonPlayerConnected(PhotonPlayer player)
-	{
+	public override void OnPhotonPlayerConnected(PhotonPlayer player) {
 		if (PhotonNetwork.playerList.Length == numPlayers) { 
 			// Everyone's here
 			Basics.assert(!started);
@@ -45,6 +53,13 @@ public class Network : Photon.PunBehaviour
 		else
 				Basics.Log ("Game started; not the master");		
 		}
+	}
+
+	public override void OnPhotonPlayerDisconnected(PhotonPlayer player)
+	{
+		Basics.Log ("Peer disconnected; we're out");		
+
+		EndGame();
 	}
 
     public void OnPhotonRandomJoinFailed()
@@ -107,15 +122,19 @@ public class Network : Photon.PunBehaviour
 			Basics.assert(waitingForTurn); // shouldn't receive turn before game start
 			return;
 		}
+		//while (waitingForTurn)
+		//	continue;
+		// No,no, no. This is what you code at 3:30 AM
 		if (waitingForTurn)
 			return;
+	
 
 		// Have both players acted?
 		if (turnTaken && !waitingForTurn) {
 			// Yes. First mimic the other player's actions
 			Basics.Log("Turn done, replaying foe's actions");
 			foreach (var a in actionsReceived)
-				DragonGame.instance.ProcessAction(a);
+				DragonGame.instance.ProcessAction(a, true);
 
 			// Now, start new turn
 			Basics.Log("Starting new turn");

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class Ui : MonoBehaviour {
 	
-	public string debug = "_";
+	public string debug;
 	
-	public float dragSpeedCoefficient = 1.0f;
-	public float keyboardScrollSpeed = 10f;
+	public float dragSpeedCoefficient;
+	public float keyboardScrollSpeed;
 
 	// {touch->durationPressed}
 	//Dictionary<Touch, float> touchDurations = new Dictionary<Touch, float>();
@@ -20,6 +20,10 @@ public class Ui : MonoBehaviour {
 	void Start () {
 		Basics.assert(!instance);
 		instance = this;
+
+		debug = "_";
+		dragSpeedCoefficient = 1f;
+		keyboardScrollSpeed = 1000f;
 	}
 
 	public void OnGUI()
@@ -32,46 +36,89 @@ public class Ui : MonoBehaviour {
 		viewportSize.y = viewportSize.y * Camera.main.aspect;
 
 		var position = Camera.main.transform.position + delta;
-		/*
 		// Keep our view within the map bounds
 		position.x = Mathf.Clamp(position.x, viewportSize.x, 
 		                                               DragonGame.instance.mapBounds.x - viewportSize.x);
 		position.y = Mathf.Clamp(position.y, viewportSize.y, 
 		                                               DragonGame.instance.mapBounds.y - viewportSize.y);
-		*/
 		Camera.main.transform.position = position;
 	}
 
 	// Update is called once per frame
 	void Update () {
-
 		if (!Network.instance.started)
 			// Ignore inputs while waiting for game start
 			return;
 
+		keyboardScrollSpeed = 2000f;
 		// Note that we can drag the camera around when it's not our turn, we just can't click stuff
-
 
 		// Keyboard inputs, for debug
 		var scroll = Vector3.zero;
 		if (Input.GetKeyUp("space")) {
+			Basics.Log("Space pressed");
 			DragonGame.instance.EndTurn();
 		}
-		if (Input.GetKeyDown(KeyCode.UpArrow)) {
+		if (Input.GetKey(KeyCode.UpArrow)) {
 			scroll = new Vector3(0f, 1f, 0f);
 		}
-		if (Input.GetKeyDown(KeyCode.RightArrow)) {
+		if (Input.GetKey(KeyCode.RightArrow)) {
 			scroll = new Vector3(1f, 0f, 0f);
 		}
-		if (Input.GetKeyDown(KeyCode.DownArrow)) {
+		if (Input.GetKey(KeyCode.DownArrow)) {
 			scroll = new Vector3(0f, -1f, 0f);
 		}
-		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+		if (Input.GetKey(KeyCode.LeftArrow)) {
 			scroll = new Vector3(-1f, 0f, 0f);
 		}
 		if (scroll != Vector3.zero)
-			Camera.main.transform.position += scroll * keyboardScrollSpeed;
+			Camera.main.transform.position += scroll * keyboardScrollSpeed * Time.deltaTime;
+		
 
+		if (Input.GetMouseButtonDown (0)) {
+			// BEGIN COPYPASTE=======================================================================================
+			var mousePos = Input.mousePosition;
+			mousePos.z = -Camera.main.transform.position.z; // Unity can't quite get its head around this whole 2D thing
+			var clickPos = Camera.main.ScreenToWorldPoint(mousePos);
+
+			// Looks like a tap
+			Basics.Log ("Casting at " + clickPos.ToString());
+			bool hitSomething = false; // RaycastHit2D is a struct; can't be null
+			RaycastHit2D hit;
+			var hits = Physics2D.RaycastAll(clickPos, Vector2.zero);
+			if (hits.Length == 1) {
+				hit = hits[0];
+				hitSomething = true;
+			}
+			else if (hits.Length > 1) {
+				// Multiple tiles clicked, pick the one in front (based on draw order)
+				hitSomething = true;
+				var bestLayer = -1;
+				foreach (var h in hits) {
+					var layer = h.collider.GetComponent<SpriteRenderer>().sortingOrder;
+					if (layer > bestLayer) {
+						bestLayer = layer;
+						hit = h;
+					}
+				}
+			}			
+			
+			if (hitSomething) {
+				// We've clicked something
+				if (hit.collider.gameObject.tag == "endTurn")
+					// It's the end turn button
+					DragonGame.instance.EndTurn();
+				
+				var tile = hit.collider.GetComponent<Tile>();
+				
+				if (tile != null) {
+					// Tile clicked. At the moment, all we can do is dig
+					DragonGame.instance.ProcessAction(new Incantation(tile));
+				}
+			}
+			// END COPYPASTE=======================================================================================
+		}
+		
 		// Touch inputs
 		if (Input.touches.Length > 0) {
 			var summary = "TOUCH INFO:\n";
