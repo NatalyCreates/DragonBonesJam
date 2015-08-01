@@ -45,14 +45,19 @@ public class MapGenerator : MonoBehaviour {
 		xpos = 0;
 		ypos = 0;
 		position = new Vector2(xpos, ypos);
-		GenerateMap(1);
+		GenerateMap(0);
 	}
 
 	[PunRPC]
 	void GenerateMap (int seed) {
 
-		Debug.Log("Running GenerateMap with seed " + seed);
-		Random.seed = seed;
+		if (seed != 0) {
+			Debug.Log("Running GenerateMap with seed from network " + seed);
+			Random.seed = seed;
+		}
+		else {
+			Debug.Log("Running GenerateMap with random seed " + Random.seed);
+		}
 
 		// Make sure to preserve the order of random generation
 
