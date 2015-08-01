@@ -10,6 +10,7 @@ public class MapGenerator : MonoBehaviour {
 		WALL,
 		FOG,
 	};
+
 	enum TileType {
 		FLOOR_NONE,
 		FLOOR,
@@ -61,9 +62,17 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	GameObject tilePrefab;
+	public GameObject floorNoneTilePrefab;
 	public GameObject floorTilePrefab;
+	public GameObject floorBonesTilePrefab;
+	public GameObject floorRoomTilePrefab;
 	public GameObject wallTilePrefab;
+	public GameObject wallBonesTilePrefab;
+	public GameObject wallRoomTilePrefab;
+	public GameObject wallDragonTilePrefab;
+	public GameObject wallRockTilePrefab;
 	public GameObject fogTilePrefab;
+	public GameObject fogRockTilePrefab;
 
 	float xpos;
 	float ypos;
@@ -327,14 +336,38 @@ public class MapGenerator : MonoBehaviour {
 		}
 
 		switch (tileType) {
+		case TileType.FLOOR_NONE:
+			tilePrefab = floorNoneTilePrefab;
+			break;
 		case TileType.FLOOR:
 			tilePrefab = floorTilePrefab;
 			break;
+		case TileType.FLOOR_BONES:
+			tilePrefab = floorBonesTilePrefab;
+			break;
 		case TileType.FLOOR_ROOM:
-			tilePrefab = floorTilePrefab;
+			tilePrefab = floorRoomTilePrefab;
+			break;
+		case TileType.WALL:
+			tilePrefab = wallTilePrefab;
+			break;
+		case TileType.WALL_BONES:
+			tilePrefab = wallBonesTilePrefab;
 			break;
 		case TileType.WALL_ROOM:
-			tilePrefab = floorTilePrefab;
+			tilePrefab = wallRoomTilePrefab;
+			break;
+		case TileType.WALL_DRAGON:
+			tilePrefab = wallDragonTilePrefab;
+			break;
+		case TileType.WALL_ROCK:
+			tilePrefab = wallRockTilePrefab;
+			break;
+		case TileType.FOG:
+			tilePrefab = fogTilePrefab;
+			break;
+		case TileType.FOG_ROCK:
+			tilePrefab = fogRockTilePrefab;
 			break;
 		}
 
