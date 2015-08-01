@@ -17,16 +17,13 @@ public class DragonGame : MonoBehaviour {
 	public Vector2 mapBounds;
 	public const float tileWidth = 256.0f;
 	public const float tileHeight = 256.0f;
-	public const float maxTileNeighborDistance = 1.1 * Mathf.Sqrt(2 * Mathf.Pow(tileWidth, 2)); // should be a bit more than the distance from the center of a tile to the nearest point on its diagonally adjacent neighbors
-
-	public const float tileWidth = 256.0f;
-	public const float tileHeight = 256.0f;
+	public static float maxTileNeighborDistance; // should be a bit more than the distance from the center of a tile to the nearest point on its diagonally adjacent neighbors
 
 	void Start () {
 		Basics.assert(!instance);
 		instance = this;
 
-
+		maxTileNeighborDistance = 1.1f * Mathf.Sqrt(2 * Mathf.Pow(tileWidth, 2));
 	}
 
 	public void EndTurn() {
@@ -62,6 +59,14 @@ public class DragonGame : MonoBehaviour {
 			localPlayer.actionsTaken.Add(action);
 	}
 
+	/// If tile is dug, recursively reveals it and any dug neighbors
+	private void reveal(Tile tile, HashSet<Tile> visited = null) {
+		if (visited == null)
+			visited = new HashSet<Tile>();
+		// TODO: implement
+		//if (!visited.Contains.t
+	}
+
 	public void StartTurn() {
 		Basics.assert(localPlayer.turnTaken);
 
@@ -93,9 +98,5 @@ public class DragonGame : MonoBehaviour {
 
 	private bool TryDig(string tileName) {
 		return TryDig (GameObject.Find(tileName).GetComponent<Tile>());
-	}	 
-
-	private void TryReveal(Tile tile) {
-
-	}
+	}	 	
 }
