@@ -95,11 +95,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 83368218}
-  - 114: {fileID: 83368217}
   - 114: {fileID: 83368219}
   - 114: {fileID: 83368220}
   - 114: {fileID: 83368221}
   - 114: {fileID: 83368222}
+  - 114: {fileID: 83368217}
   m_Layer: 0
   m_Name: ManagerSingleton
   m_TagString: Untagged
@@ -118,15 +118,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43139d7052e8ea543ae6cafbc3ca7dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueIdCounter: -1
-  tilePrefab1: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
-  tilePrefab2: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
-  tilePrefab3: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
-  tilePrefab4: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
-  tilePrefab5: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
-  tilePrefab6: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
-  tilePrefab7: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
-  tilePrefab8: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
+  floorTilePrefab: {fileID: 0}
+  wallTilePrefab: {fileID: 0}
+  fogTilePrefab: {fileID: 0}
 --- !u!4 &83368218
 Transform:
   m_ObjectHideFlags: 0

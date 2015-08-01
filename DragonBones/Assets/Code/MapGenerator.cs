@@ -12,18 +12,19 @@ public class MapGenerator : MonoBehaviour {
 	};
 	enum TileType {
 		FLOOR_NONE,
-		FLOOR_DIG,
-		FLOOR_DIG_POWER,
+		FLOOR,
+		FLOOR_BONES,
 		FLOOR_ROOM,
-		WALL_DIG,
-		WALL_DIG_POWER,
+		WALL,
+		WALL_BONES,
 		WALL_ROOM,
 		WALL_DRAGON,
 		WALL_ROCK,
-		WALL_UNKOWN,
+		FOG,
+		FOG_ROCK,
 	};
 
-	public int uniqueIdCounter = 0;
+	int uniqueIdCounter = 0;
 
 	struct TileLayered {
 		public int _id;
@@ -60,14 +61,9 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	GameObject tilePrefab;
-	public GameObject tilePrefab1;
-	public GameObject tilePrefab2;
-	public GameObject tilePrefab3;
-	public GameObject tilePrefab4;
-	public GameObject tilePrefab5;
-	public GameObject tilePrefab6;
-	public GameObject tilePrefab7;
-	public GameObject tilePrefab8;
+	public GameObject floorTilePrefab;
+	public GameObject wallTilePrefab;
+	public GameObject fogTilePrefab;
 
 	float xpos;
 	float ypos;
@@ -98,9 +94,16 @@ public class MapGenerator : MonoBehaviour {
 			for (int j = 0; j < tileMap[i].Count; j++) {
 				Debug.Log ("Tile ID = " + tileMap[i][j]._id.ToString() + "");
 				Debug.Log ("[" + tileMap[i][j]._row.ToString() + "," + tileMap[i][j]._col.ToString() + "] == [" + i.ToString() + "," + j.ToString() + "]");
-				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FLOOR, TileType.FLOOR_ROOM, tileMap[i][j]._id);
-				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.WALL, TileType.WALL_ROOM, tileMap[i][j]._id);
-				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FOG, TileType.WALL_UNKOWN, tileMap[i][j]._id);
+				int id = tileMap[i][j]._id;
+				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FLOOR, TileType.FLOOR_ROOM, id);
+				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.WALL, TileType.WALL_ROOM, id);
+				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FOG, TileType.FOG, id);
+				GameObject floorFind = GameObject.Find ("Tile Floor " + id.ToString());
+				GameObject fogFind = GameObject.Find ("Tile Fog " + id.ToString());
+				floorFind.transform.parent = GameObject.Find("Tile Wall " + id.ToString()).transform;
+				fogFind.transform.parent = GameObject.Find("Tile Wall " + id.ToString()).transform;
+				floorFind.name = "Floor";
+				fogFind.name = "Fog";
 			}
 		}
 	}
@@ -270,7 +273,7 @@ public class MapGenerator : MonoBehaviour {
 		MakeDiamondMap();
 		IterateTileMapAndCreate();
 	}
-
+	/*
 	void PickRandomTile () {
 		int tile = Random.Range(4,9);
 		switch (tile) {
@@ -302,10 +305,9 @@ public class MapGenerator : MonoBehaviour {
 			tilePrefab = tilePrefab1;
 			break;
 		}
-	}
+	}*/
 
 	void AddTile (float x, float y, TileLayer tileLayer, TileType tileType, int tileId) {
-		PickRandomTile();
 		position.x = x;
 		position.y = y;
 
@@ -324,12 +326,28 @@ public class MapGenerator : MonoBehaviour {
 			break;
 		}
 
+		switch (tileType) {
+		case TileType.FLOOR:
+			tilePrefab = floorTilePrefab;
+			break;
+		case TileType.FLOOR_ROOM:
+			tilePrefab = floorTilePrefab;
+			break;
+		case TileType.WALL_ROOM:
+			tilePrefab = floorTilePrefab;
+			break;
+		}
+
 		//newName = "Tile " + sortingCount.ToString();
 		Basics.assert(GameObject.Find(newName) == null);
 		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
 		newTile.name = newName;
 		newTile.transform.parent = gameObject.transform;
 		newTile.GetComponent<SpriteRenderer>().sortingOrder = sortingCount;
+		if (tileLayer == TileLayer.FLOOR) {
+
+		}
+
 		sortingCount++;
 	}
 	
