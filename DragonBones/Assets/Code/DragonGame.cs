@@ -58,13 +58,32 @@ public class DragonGame : MonoBehaviour {
 			// Successfully took an action, queue for replay
 			localPlayer.actionsTaken.Add(action);
 	}
+									
+	/// If tile is dug, reveal any contiguous dug tiles, and any of said tiles' undug neighbors. Else just reveal tile.
+	private void Reveal(Tile tile) {
+		// Just a breadth-first traversal
+		var toVisit = new List<Tile>();
+		var discovered = new HashSet<Tile>();
+		discovered.Add(tile);
+		toVisit.Add(tile);
 
-	/// If tile is dug, recursively reveals it and any dug neighbors
-	private void reveal(Tile tile, HashSet<Tile> visited = null) {
-		if (visited == null)
-			visited = new HashSet<Tile>();
-		// TODO: implement
-		//if (!visited.Contains.t
+		while (toVisit.Count > 0) {
+			var current = toVisit[0];
+			toVisit.RemoveAt(0);
+
+			if (current.hidden)
+				current.Reveal();
+
+			// If tile is dug, reveal neighbors, else just reveal itself
+			if (current.dug) {
+				foreach (var n in tile.neighbors) {
+					if (!discovered.Contains(n)) {
+						discovered.Add(n);
+						toVisit.Add(n);
+					}
+				}
+			}
+		}
 	}
 
 	public void StartTurn() {
@@ -78,6 +97,8 @@ public class DragonGame : MonoBehaviour {
 	
 	/// @return true on success
 	private bool TryDig(Tile tile) {
+		if (tile.hidden) // TEMP DEBUG: reveal tile
+			tile.Reveal();
 		if (!tile.diggable || localPlayer.shovels < 1)
 			return false;
 
@@ -92,6 +113,9 @@ public class DragonGame : MonoBehaviour {
 		// Loot happens here
 
 		tile.Dig ();
+
+		// Transitively reveal tile's neighbors
+		Reveal(tile);
 
 		return true;
 	}

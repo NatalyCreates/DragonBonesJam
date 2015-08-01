@@ -45,6 +45,7 @@ public class Ui : MonoBehaviour {
 	/// @return an index in the given array, -1 if nothing clickable
 	GameObject ThingClicked(Vector2 screenPos) {
 		var hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(screenPos), Vector2.zero);
+		Basics.Log ("Hit " + hits.Length.ToString() + " things");
 
 		if (hits.Length == 0)
 			return null;
@@ -73,10 +74,10 @@ public class Ui : MonoBehaviour {
 
 		var position = Camera.main.transform.position + delta;
 		// Keep our view within the map bounds
-		position.x = Mathf.Clamp(position.x, viewportSize.x, 
+		/*position.x = Mathf.Clamp(position.x, viewportSize.x, 
 		                                               DragonGame.instance.mapBounds.x - viewportSize.x);
 		position.y = Mathf.Clamp(position.y, viewportSize.y, 
-		                                               DragonGame.instance.mapBounds.y - viewportSize.y);
+		                                               DragonGame.instance.mapBounds.y - viewportSize.y);*/
 		Camera.main.transform.position = position;
 	}
 
@@ -108,18 +109,15 @@ public class Ui : MonoBehaviour {
 			scroll = new Vector3(-1f, 0f, 0f);
 		}
 		if (scroll != Vector3.zero)
-			Camera.main.transform.position += scroll * keyboardScrollSpeed * Time.deltaTime;
+			TryMoveCamera(scroll * keyboardScrollSpeed * Time.deltaTime);
 		
 
 		if (Input.GetMouseButtonDown (0)) {
-			// BEGIN COPYPASTE=======================================================================================
 			var mousePos = Input.mousePosition;
 			mousePos.z = -Camera.main.transform.position.z; // Unity can't quite get its head around this whole 2D thing
-			var clickPos = Camera.main.ScreenToWorldPoint(mousePos);
 
 			// Looks like a tap
-			Basics.Log ("Casting at " + clickPos.ToString());
-			var clicked = ThingClicked (clickPos);
+			var clicked = ThingClicked (mousePos);
 			
 			if (clicked != null) {
 				// We've clicked something
@@ -131,6 +129,7 @@ public class Ui : MonoBehaviour {
 				
 				if (tile != null) {
 					// Tile clicked. At the moment, all we can do is dig
+					Basics.Log("Tile clicked");
 					DragonGame.instance.ProcessAction(new Incantation(tile));
 				}
 			}
@@ -167,6 +166,7 @@ public class Ui : MonoBehaviour {
 						
 							if (tile != null) {
 								// Tile clicked. At the moment, all we can do is dig
+								Basics.Log("Tile clicked");
 								DragonGame.instance.ProcessAction(new Incantation(tile));
 							}
 						}
