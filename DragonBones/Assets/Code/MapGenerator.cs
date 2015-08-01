@@ -30,13 +30,15 @@ public class MapGenerator : MonoBehaviour {
 	struct TileLayered {
 		public int _id;
 		public bool _drawn;
+		public bool _set;
 		public int _row;
 		public int _col;
-		public int _typeFloor;
-		public int _typeWall;
+		public TileType _typeFloor;
+		public TileType _typeWall;
+		public TileType _typeFog;
 		public GameObject _prefabFloor;
 		public GameObject _prefabWall;
-		public GameObject _prefabUnknown;
+		public GameObject _prefabFog;
 		public float _posX;
 		public float _posY;
 
@@ -48,20 +50,82 @@ public class MapGenerator : MonoBehaviour {
 			_posY = posY;
 			_typeFloor = -1;
 			_typeWall = -1;
+			_typeFog = -1;
 			_prefabFloor = null;
 			_prefabWall = null;
-			_prefabUnknown = null;
+			_prefabFog = null;
 			_drawn = false;
+			_set = false;
 		}
 
-		public void SetTypeAndCreate (int typeFloor, int typeWall) {
+		public void SetType (TileType typeFloor, TileType typeWall, TileType typeFog) {
 			_typeFloor = typeFloor;
 			_typeWall = typeWall;
+			_typeFog = typeFog;
+
+			switch (_typeFloor) {
+			case TileType.FLOOR_NONE:
+				_prefabFloor = floorNoneTilePrefab;
+				break;
+			case TileType.FLOOR:
+				_prefabFloor = floorTilePrefab;
+				break;
+			case TileType.FLOOR_BONES:
+				_prefabFloor = floorBonesTilePrefab;
+				break;
+			case TileType.FLOOR_ROOM:
+				_prefabFloor = floorRoomTilePrefab;
+				break;
+			}
+
+			switch (_typeWall) {
+			case TileType.WALL:
+				_prefabWall = wallTilePrefab;
+				break;
+			case TileType.WALL_BONES:
+				_prefabWall = wallBonesTilePrefab;
+				break;
+			case TileType.WALL_ROOM:
+				_prefabWall = wallRoomTilePrefab;
+				break;
+			case TileType.WALL_DRAGON:
+				_prefabWall = wallDragonTilePrefab;
+				break;
+			case TileType.WALL_ROCK:
+				_prefabWall = wallRockTilePrefab;
+				break;
+			}
+
+			switch (_typeFog) {
+			case TileType.FOG:
+				_prefabFog = fogTilePrefab;
+				break;
+			case TileType.FOG_ROCK:
+				_prefabFog = fogRockTilePrefab;
+				break;
+			}
+
+			_set = true;
+		}
+		public void CreateDraw () {
+
+			AddTile(_posX, _posY, TileLayer.FLOOR, _prefabFloor, _id);
+			AddTile(_posX, _posY, TileLayer.WALL, _prefabWall, _id);
+			AddTile(_posX, _posY, TileLayer.FOG, _prefabFog, _id);
+
+			GameObject floorFind = GameObject.Find ("Tile Floor " + id.ToString());
+			GameObject fogFind = GameObject.Find ("Tile Fog " + id.ToString());
+			floorFind.transform.parent = GameObject.Find("Tile Wall " + id.ToString()).transform;
+			fogFind.transform.parent = GameObject.Find("Tile Wall " + id.ToString()).transform;
+			floorFind.name = "Floor";
+			fogFind.name = "Fog";
+
 			_drawn = true;
 		}
 	}
 
-	GameObject tilePrefab;
+	//GameObject tilePrefab;
+
 	public GameObject floorNoneTilePrefab;
 	public GameObject floorTilePrefab;
 	public GameObject floorBonesTilePrefab;
@@ -76,7 +140,6 @@ public class MapGenerator : MonoBehaviour {
 
 	float xpos;
 	float ypos;
-	Vector2 position;
 	GameObject newTile;
 
 	int sortingCount = -1;
@@ -101,8 +164,15 @@ public class MapGenerator : MonoBehaviour {
 	void IterateTileMapAndCreate() {
 		for (int i = 0; i < tileMap.Count; i++) {
 			for (int j = 0; j < tileMap[i].Count; j++) {
-				Debug.Log ("Tile ID = " + tileMap[i][j]._id.ToString() + "");
-				Debug.Log ("[" + tileMap[i][j]._row.ToString() + "," + tileMap[i][j]._col.ToString() + "] == [" + i.ToString() + "," + j.ToString() + "]");
+				// figure out which tile type we want!
+				// options are - room, rock, dirt, bones, dragon
+				tileMap[i][j].SetType(TileType.FLOOR_ROOM, TileType.WALL_ROOM, TileType.FOG);
+				tileMap[i][j].CreateDraw();
+			}
+		}
+
+		for (int i = 0; i < tileMap.Count; i++) {
+			for (int j = 0; j < tileMap[i].Count; j++) {
 				int id = tileMap[i][j]._id;
 				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FLOOR, TileType.FLOOR_ROOM, id);
 				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.WALL, TileType.WALL_ROOM, id);
@@ -279,7 +349,7 @@ public class MapGenerator : MonoBehaviour {
 		// usually best to use half of number of rows as side len
 
 		//MakeHexMap(18,9);
-		MakeDiamondMap();
+		MakeDiamondMap(10,10);
 		IterateTileMapAndCreate();
 	}
 	/*
@@ -316,11 +386,12 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}*/
 
-	void AddTile (float x, float y, TileLayer tileLayer, TileType tileType, int tileId) {
+	void AddTile (float x, float y, TileLayer tileLayer, GameObject tilePrefab, int tileId) {
+		Vector2 position;
 		position.x = x;
 		position.y = y;
 
-		string newName = "Tile JustInCase" + sortingCount.ToString();
+		string newName = "Tile JustInCase " + sortingCount.ToString();
 
 		switch (tileLayer) {
 		case TileLayer.FLOOR:
@@ -335,6 +406,33 @@ public class MapGenerator : MonoBehaviour {
 			break;
 		}
 
+		Basics.assert(GameObject.Find(newName) == null);
+		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
+		newTile.name = newName;
+		newTile.transform.parent = gameObject.transform;
+		newTile.GetComponent<SpriteRenderer>().sortingOrder = sortingCount;
+		sortingCount++;
+	}
+	/*
+	void AddTileOld (float x, float y, TileLayer tileLayer, TileType tileType, int tileId) {
+		position.x = x;
+		position.y = y;
+		
+		string newName = "Tile JustInCase " + sortingCount.ToString();
+		
+		switch (tileLayer) {
+		case TileLayer.FLOOR:
+			//GameObject.Find ("Tile 28/Floor");
+			newName = "Tile Floor " + tileId.ToString();
+			break;
+		case TileLayer.WALL:
+			newName = "Tile Wall " + tileId.ToString();
+			break;
+		case TileLayer.FOG:
+			newName = "Tile Fog " + tileId.ToString();
+			break;
+		}
+		
 		switch (tileType) {
 		case TileType.FLOOR_NONE:
 			tilePrefab = floorNoneTilePrefab;
@@ -370,7 +468,7 @@ public class MapGenerator : MonoBehaviour {
 			tilePrefab = fogRockTilePrefab;
 			break;
 		}
-
+		
 		//newName = "Tile " + sortingCount.ToString();
 		Basics.assert(GameObject.Find(newName) == null);
 		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
@@ -378,12 +476,14 @@ public class MapGenerator : MonoBehaviour {
 		newTile.transform.parent = gameObject.transform;
 		newTile.GetComponent<SpriteRenderer>().sortingOrder = sortingCount;
 		if (tileLayer == TileLayer.FLOOR) {
-
+			
 		}
-
+		
 		sortingCount++;
 	}
-	
+	*/
+
+
 	// Update is called once per frame
 	void Update () {
 	
