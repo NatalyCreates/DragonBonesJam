@@ -32,21 +32,25 @@ public class Ui : MonoBehaviour {
 		viewportSize.y = viewportSize.y * Camera.main.aspect;
 
 		var position = Camera.main.transform.position + delta;
+		/*
 		// Keep our view within the map bounds
 		position.x = Mathf.Clamp(position.x, viewportSize.x, 
 		                                               DragonGame.instance.mapBounds.x - viewportSize.x);
 		position.y = Mathf.Clamp(position.y, viewportSize.y, 
 		                                               DragonGame.instance.mapBounds.y - viewportSize.y);
+		*/
 		Camera.main.transform.position = position;
 	}
 
 	// Update is called once per frame
 	void Update () {
+
 		if (!Network.instance.started)
 			// Ignore inputs while waiting for game start
 			return;
 
 		// Note that we can drag the camera around when it's not our turn, we just can't click stuff
+
 
 		// Keyboard inputs, for debug
 		var scroll = Vector3.zero;

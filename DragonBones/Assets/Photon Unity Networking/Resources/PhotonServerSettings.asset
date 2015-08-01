@@ -37,4 +37,5 @@ MonoBehaviour:
   - TaggedPlayer
   - GenerateMap
   - Bla1
+  - ReceiveActions
   DisableAutoOpenWizard: 1

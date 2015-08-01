@@ -144,11 +144,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 83368216}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5778829839f71a34295ae8b9a3b6a279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  started: 0
 --- !u!114 &83368220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: _
   dragSpeedCoefficient: 1
+  keyboardScrollSpeed: 10
 --- !u!114 &83368222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,7 +252,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 1058354369}
   - 212: {fileID: 1058354368}
-  - 114: {fileID: 1058354370}
   - 60: {fileID: 1058354371}
   m_Layer: 0
   m_Name: EndTurnButton
@@ -297,17 +298,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &1058354370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1058354367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b7aa6f9f6c867843a315b011a194514, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!60 &1058354371
 PolygonCollider2D:
   m_ObjectHideFlags: 0

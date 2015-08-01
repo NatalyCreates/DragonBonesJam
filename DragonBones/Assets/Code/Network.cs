@@ -107,8 +107,8 @@ public class Network : Photon.PunBehaviour
 			Basics.assert(waitingForTurn); // shouldn't receive turn before game start
 			return;
 		}
-		while (waitingForTurn)
-			continue;
+		if (waitingForTurn)
+			return;
 
 		// Have both players acted?
 		if (turnTaken && !waitingForTurn) {

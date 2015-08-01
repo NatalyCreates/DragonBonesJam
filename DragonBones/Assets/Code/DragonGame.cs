@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class Player {
 	/// Digging power per round
 	public IList<Incantation> actionsTaken = new List<Incantation>();
-	public int maxShovels = 1;
-	public int shovels = 1;
+	public int maxShovels = 1000;
+	public int shovels = 1000;
 
 	public bool turnTaken = false;
 }
@@ -22,6 +22,7 @@ public class DragonGame : MonoBehaviour {
 	}
 
 	public void EndTurn() {
+
 		if (!Network.instance.started) {
 			Basics.Log("End turn? I've hardly started!");
 			return;
