@@ -5,7 +5,13 @@ using System.Collections.Generic;
 
 public class MapGenerator : MonoBehaviour {
 
+	enum TileLayer {
+		FLOOR,
+		WALL,
+		FOG,
+	};
 	enum TileType {
+		FLOOR_NONE,
 		FLOOR_DIG,
 		FLOOR_DIG_POWER,
 		FLOOR_ROOM,
@@ -16,15 +22,41 @@ public class MapGenerator : MonoBehaviour {
 		WALL_ROCK,
 		WALL_UNKOWN,
 	};
+
+	public int uniqueIdCounter = 0;
+
 	struct TileLayered {
-		private bool set;
-		public int xInMap;
-		public int yInMap;
-		public int typeFloor;
-		public int typeWall;
-		public GameObject prefabFloor;
-		public GameObject prefabWall;
-		public GameObject prefabUnknown;
+		public int _id;
+		public bool _drawn;
+		public int _row;
+		public int _col;
+		public int _typeFloor;
+		public int _typeWall;
+		public GameObject _prefabFloor;
+		public GameObject _prefabWall;
+		public GameObject _prefabUnknown;
+		public float _posX;
+		public float _posY;
+
+		public TileLayered (int id, int row, int col, float posX, float posY) {
+			_id = id;
+			_row = row;
+			_col = col;
+			_posX = posX;
+			_posY = posY;
+			_typeFloor = -1;
+			_typeWall = -1;
+			_prefabFloor = null;
+			_prefabWall = null;
+			_prefabUnknown = null;
+			_drawn = false;
+		}
+
+		public void SetTypeAndCreate (int typeFloor, int typeWall) {
+			_typeFloor = typeFloor;
+			_typeWall = typeWall;
+			_drawn = true;
+		}
 	}
 
 	GameObject tilePrefab;
@@ -37,17 +69,14 @@ public class MapGenerator : MonoBehaviour {
 	public GameObject tilePrefab7;
 	public GameObject tilePrefab8;
 
-	float tileWidth = 256.0f;
-	float tileHeight = 256.0f;
-
 	float xpos;
 	float ypos;
 	Vector2 position;
 	GameObject newTile;
 
-	int sortingCount = 0;
+	int sortingCount = -1;
 
-	List<TileLayered> tileMap =  new List<TileLayered>();
+	List<List<TileLayered>> tileMap =  new List<List<TileLayered>>();
 
 	//Tile tileScriptRef;
 
@@ -59,18 +88,39 @@ public class MapGenerator : MonoBehaviour {
 		GenerateMap(0);
 	}
 
+	public int GetNextId() {
+		uniqueIdCounter++;
+		return uniqueIdCounter;
+	}
+
+	void IterateTileMapAndCreate() {
+		for (int i = 0; i < tileMap.Count; i++) {
+			for (int j = 0; j < tileMap[i].Count; j++) {
+				Debug.Log ("Tile ID = " + tileMap[i][j]._id.ToString() + "");
+				Debug.Log ("[" + tileMap[i][j]._row.ToString() + "," + tileMap[i][j]._col.ToString() + "] == [" + i.ToString() + "," + j.ToString() + "]");
+				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FLOOR, TileType.FLOOR_ROOM, tileMap[i][j]._id);
+				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.WALL, TileType.WALL_ROOM, tileMap[i][j]._id);
+				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FOG, TileType.WALL_UNKOWN, tileMap[i][j]._id);
+			}
+		}
+	}
+
 	void MakeDiamondMap(int rowLen = 6, int totalRows = 6) {
 		int curRow, curTile;
 
 		for (curRow = 0; curRow < totalRows; curRow++) {
+			List<TileLayered> tempTileList = new List<TileLayered>();
 			for (curTile = 0; curTile < rowLen; curTile++) {
-				xpos = xpos + (tileWidth / 2);
-				ypos = ypos - (tileHeight / 4);
-				AddTile(xpos, ypos);
+				xpos = xpos + (DragonGame.tileWidth / 2);
+				ypos = ypos - (DragonGame.tileHeight / 4);
+				tempTileList.Add(new TileLayered(GetNextId(), curRow, curTile, xpos, ypos));
+				//AddTile(xpos, ypos);
 			}
+			tileMap.Add(tempTileList);
+			tempTileList = new List<TileLayered>();
 			// move pointer back to start
-			xpos = xpos - ((rowLen + 1) * (tileWidth / 2));
-			ypos = ypos + ((rowLen - 1) * (tileHeight / 4));
+			xpos = xpos - ((rowLen + 1) * (DragonGame.tileWidth / 2));
+			ypos = ypos + ((rowLen - 1) * (DragonGame.tileHeight / 4));
 		}
 	}
 
@@ -83,13 +133,13 @@ public class MapGenerator : MonoBehaviour {
 		
 		for (curRow = 0; curRow < totalRows; curRow++) {
 			for (curTile = 0; curTile < nextRowLen; curTile++) {
-				xpos = xpos + (tileWidth / 2);
-				ypos = ypos - (tileHeight / 4);
-				AddTile(xpos, ypos);
+				xpos = xpos + (DragonGame.tileWidth / 2);
+				ypos = ypos - (DragonGame.tileHeight / 4);
+				//AddTile(xpos, ypos);
 			}
 			// move pointer back to start
-			xpos = xpos - ((nextRowLen + 1) * (tileWidth / 2));
-			ypos = ypos + ((nextRowLen - 1) * (tileHeight / 4));
+			xpos = xpos - ((nextRowLen + 1) * (DragonGame.tileWidth / 2));
+			ypos = ypos + ((nextRowLen - 1) * (DragonGame.tileHeight / 4));
 			
 			// even number of rows
 			if (totalRows % 2 == 0) {
@@ -97,8 +147,8 @@ public class MapGenerator : MonoBehaviour {
 				if (curRow < totalRows/2 - 1) {
 					nextRowLen = nextRowLen + rowIncRate;
 					for (int i = 0; i < rowIncRate/2; i++) {
-						xpos = xpos - (tileWidth / 2);
-						ypos = ypos + (tileHeight / 4);
+						xpos = xpos - (DragonGame.tileWidth / 2);
+						ypos = ypos + (DragonGame.tileHeight / 4);
 					}
 				}
 				// first row of second half
@@ -109,8 +159,8 @@ public class MapGenerator : MonoBehaviour {
 				else {
 					nextRowLen = nextRowLen - rowIncRate;
 					for (int i = 0; i < rowIncRate/2; i++) {
-						xpos = xpos + (tileWidth / 2);
-						ypos = ypos - (tileHeight / 4);
+						xpos = xpos + (DragonGame.tileWidth / 2);
+						ypos = ypos - (DragonGame.tileHeight / 4);
 					}
 				}
 			}
@@ -120,16 +170,16 @@ public class MapGenerator : MonoBehaviour {
 				if (curRow < totalRows/2) {
 					nextRowLen = nextRowLen + rowIncRate;
 					for (int i = 0; i < rowIncRate/2; i++) {
-						xpos = xpos - (tileWidth / 2);
-						ypos = ypos + (tileHeight / 4);
+						xpos = xpos - (DragonGame.tileWidth / 2);
+						ypos = ypos + (DragonGame.tileHeight / 4);
 					}
 				}
 				// second half
 				else {
 					nextRowLen = nextRowLen - rowIncRate;
 					for (int i = 0; i < rowIncRate/2; i++) {
-						xpos = xpos + (tileWidth / 2);
-						ypos = ypos - (tileHeight / 4);
+						xpos = xpos + (DragonGame.tileWidth / 2);
+						ypos = ypos - (DragonGame.tileHeight / 4);
 					}
 				}
 			}
@@ -145,13 +195,13 @@ public class MapGenerator : MonoBehaviour {
 		
 		for (curRow = 0; curRow < totalRows; curRow++) {
 			for (curTile = 0; curTile < nextRowLen; curTile++) {
-				xpos = xpos + (tileWidth / 2);
-				ypos = ypos - (tileHeight / 4);
-				AddTile(xpos, ypos);
+				xpos = xpos + (DragonGame.tileWidth / 2);
+				ypos = ypos - (DragonGame.tileHeight / 4);
+				//AddTile(xpos, ypos);
 			}
 			// move pointer back to start
-			xpos = xpos - ((nextRowLen + 1) * (tileWidth / 2));
-			ypos = ypos + ((nextRowLen - 1) * (tileHeight / 4));
+			xpos = xpos - ((nextRowLen + 1) * (DragonGame.tileWidth / 2));
+			ypos = ypos + ((nextRowLen - 1) * (DragonGame.tileHeight / 4));
 			
 			// even number of rows
 			if (totalRows % 2 == 0) {
@@ -159,8 +209,8 @@ public class MapGenerator : MonoBehaviour {
 				if (curRow < totalRows/2 - sideLen/2) {
 					nextRowLen = nextRowLen + rowIncRate;
 					for (int i = 0; i < rowIncRate/2; i++) {
-						xpos = xpos - (tileWidth / 2);
-						ypos = ypos + (tileHeight / 4);
+						xpos = xpos - (DragonGame.tileWidth / 2);
+						ypos = ypos + (DragonGame.tileHeight / 4);
 					}
 				}
 				// first row of second half
@@ -171,8 +221,8 @@ public class MapGenerator : MonoBehaviour {
 				else {
 					nextRowLen = nextRowLen - rowIncRate;
 					for (int i = 0; i < rowIncRate/2; i++) {
-						xpos = xpos + (tileWidth / 2);
-						ypos = ypos - (tileHeight / 4);
+						xpos = xpos + (DragonGame.tileWidth / 2);
+						ypos = ypos - (DragonGame.tileHeight / 4);
 					}
 				}
 			}
@@ -182,8 +232,8 @@ public class MapGenerator : MonoBehaviour {
 				if (curRow < totalRows/2 - sideLen/2 + 1) {
 					nextRowLen = nextRowLen + rowIncRate;
 					for (int i = 0; i < rowIncRate/2; i++) {
-						xpos = xpos - (tileWidth / 2);
-						ypos = ypos + (tileHeight / 4);
+						xpos = xpos - (DragonGame.tileWidth / 2);
+						ypos = ypos + (DragonGame.tileHeight / 4);
 					}
 				}
 				// first row of second half
@@ -194,8 +244,8 @@ public class MapGenerator : MonoBehaviour {
 				else {
 					nextRowLen = nextRowLen - rowIncRate;
 					for (int i = 0; i < rowIncRate/2; i++) {
-						xpos = xpos + (tileWidth / 2);
-						ypos = ypos - (tileHeight / 4);
+						xpos = xpos + (DragonGame.tileWidth / 2);
+						ypos = ypos - (DragonGame.tileHeight / 4);
 					}
 				}
 			}
@@ -207,19 +257,18 @@ public class MapGenerator : MonoBehaviour {
 	void GenerateMap (int seed) {
 
 		if (seed != 0) {
-			Debug.Log("Running GenerateMap with seed from network " + seed);
+			Debug.Log("Running GenerateMap with seed from network " + seed.ToString());
 			Random.seed = seed;
 		}
 		else {
-			Debug.Log("Running GenerateMap with random seed " + Random.seed);
+			Debug.Log("Running GenerateMap with random seed " + Random.seed.ToString());
 		}
-
 		// Make sure to preserve the order of random generation
-
 		// usually best to use half of number of rows as side len
 
-		MakeHexMap(18,9);
-
+		//MakeHexMap(18,9);
+		MakeDiamondMap();
+		IterateTileMapAndCreate();
 	}
 
 	void PickRandomTile () {
@@ -255,11 +304,27 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
-	void AddTile (float x, float y) {
+	void AddTile (float x, float y, TileLayer tileLayer, TileType tileType, int tileId) {
 		PickRandomTile();
 		position.x = x;
 		position.y = y;
-		string newName = "Tile " + sortingCount.ToString();
+
+		string newName = "Tile JustInCase" + sortingCount.ToString();
+
+		switch (tileLayer) {
+		case TileLayer.FLOOR:
+			//GameObject.Find ("Tile 28/Floor");
+			newName = "Tile Floor " + tileId.ToString();
+			break;
+		case TileLayer.WALL:
+			newName = "Tile Wall " + tileId.ToString();
+			break;
+		case TileLayer.FOG:
+			newName = "Tile Fog " + tileId.ToString();
+			break;
+		}
+
+		//newName = "Tile " + sortingCount.ToString();
 		Basics.assert(GameObject.Find(newName) == null);
 		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
 		newTile.name = newName;
