@@ -16,6 +16,9 @@ public class DragonGame : MonoBehaviour {
 	public Player localPlayer = new Player();
 	public Vector2 mapBounds;
 
+	public const float tileWidth = 256.0f;
+	public const float tileHeight = 256.0f;
+
 	void Start () {
 		Basics.assert(!instance);
 		instance = this;

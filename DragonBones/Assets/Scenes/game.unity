@@ -118,13 +118,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43139d7052e8ea543ae6cafbc3ca7dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab1: {fileID: 147482, guid: 4e8a49b79dc4c2a45a3676aff15248d8, type: 2}
-  tilePrefab2: {fileID: 184446, guid: af86ed3922271f447a5a99a9197d97e2, type: 2}
-  tilePrefab3: {fileID: 123384, guid: 65648ada2ddee87469efc57d6b886e27, type: 2}
+  uniqueIdCounter: -1
+  tilePrefab1: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
+  tilePrefab2: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
+  tilePrefab3: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
   tilePrefab4: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
-  tilePrefab5: {fileID: 131214, guid: dbc118bd405c16940a0ad3ca463d37f8, type: 2}
-  tilePrefab6: {fileID: 117984, guid: ca7d5566402e498439c6597cc571a74d, type: 2}
-  tilePrefab7: {fileID: 110232, guid: 9eaff0f0355995d41842d291910e94fa, type: 2}
+  tilePrefab5: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
+  tilePrefab6: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
+  tilePrefab7: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
   tilePrefab8: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
 --- !u!4 &83368218
 Transform:
