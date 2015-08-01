@@ -204,6 +204,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapBounds: {x: 200, y: 200}
+--- !u!1001 &259338964
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 423588, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 423588, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 423588, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 423588, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 423588, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 423588, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 423588, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 423588, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 3e7403ac15712e04aab4c296cba51a80, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &1047821335
 Prefab:
   m_ObjectHideFlags: 0
@@ -287,7 +329,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 922881915
   m_SortingOrder: 32767
-  m_Sprite: {fileID: 21300000, guid: 1141068be37082543a53eb7d0790bf85, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 73764aca4b3a42d43af887dd511d73cd, type: 3}
   m_Color: {r: .176316872, g: .117755197, b: .889705896, a: 1}
 --- !u!4 &1058354369
 Transform:

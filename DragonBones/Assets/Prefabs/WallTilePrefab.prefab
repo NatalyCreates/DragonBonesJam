@@ -60,8 +60,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b2383701d03e2c4c9e7a899aac7b4d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diggable: 1
   dug: 0
+  hidden: 1
+  solid: 0
 --- !u!212 &21281226
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -94,7 +95,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: solid
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: hidden
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 113768}
