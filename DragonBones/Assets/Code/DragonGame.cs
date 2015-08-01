@@ -22,6 +22,10 @@ public class DragonGame : MonoBehaviour {
 	}
 
 	public void EndTurn() {
+		if (!Network.instance.started) {
+			Basics.Log("End turn? I've hardly started!");
+			return;
+		}
 		if (localPlayer.turnTaken)
 			return; // can this happen? Can we process more than one click per Unity update, or could we get another update
 					// call before the previous one returns?
@@ -38,8 +42,9 @@ public class DragonGame : MonoBehaviour {
 
 		result = TryDig (action.tileName); // only action we can carry out at the moment
 
-		Basics.assert(result || repeating);
-		if (!repeating)
+		Basics.assert(result || !repeating); // we shouldn't be replaying unsuccessful actions
+		if (result && !repeating)
+			// Successfully took an action, queue for replay
 			localPlayer.actionsTaken.Add(action);
 	}
 

@@ -10,7 +10,7 @@ public class Network : Photon.PunBehaviour
 
 	bool otherPlayerIdled = false;
 
-	bool started = false;
+	public bool started = false;
 
 	private const int numPlayers = 2;
 
@@ -56,6 +56,8 @@ public class Network : Photon.PunBehaviour
 	public void ReceiveActions(string actions) {
 		Basics.assert(waitingForTurn);
 
+		Basics.Log("Receiving actions");
+
 		if (actions == "_NOTHING_") {
 			otherPlayerIdled = true;
 			return;
@@ -70,6 +72,7 @@ public class Network : Photon.PunBehaviour
 	}
 
 	public void SendActions() {
+		Basics.Log("Sending actions");
 		var actions = DragonGame.instance.localPlayer.actionsTaken;
 		var descriptors = "";
 
@@ -110,10 +113,12 @@ public class Network : Photon.PunBehaviour
 		// Have both players acted?
 		if (turnTaken && !waitingForTurn) {
 			// Yes. First mimic the other player's actions
+			Basics.Log("Turn done, replaying foe's actions");
 			foreach (var a in actionsReceived)
 				DragonGame.instance.ProcessAction(a);
 
 			// Now, start new turn
+			Basics.Log("Starting new turn");
 			actionsReceived.Clear();
 			otherPlayerIdled = false;
 			turnTaken = false;
