@@ -2,7 +2,7 @@
 using System.Collections;
 
 /// A player action. We execute these locally, then send them to the other player, who does the same.
-public class Incantation : MonoBehaviour {
+public class Incantation {
 	// This class is presently kinda trivial, as there is only one thing we can do
 
 	/// This is how we identify the tile selected. Tile names should be unique
