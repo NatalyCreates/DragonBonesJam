@@ -115,7 +115,10 @@ public class MapGenerator : MonoBehaviour {
 		PickRandomTile();
 		position.x = x;
 		position.y = y;
+		string newName = "Tile " + sortingCount.ToString();
+		Basics.assert(GameObject.Find(newName) == null);
 		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
+		newTile.name = newName;
 		newTile.transform.parent = gameObject.transform;
 		newTile.GetComponent<SpriteRenderer>().sortingOrder = sortingCount;
 		sortingCount++;
