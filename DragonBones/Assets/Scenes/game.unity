@@ -118,9 +118,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43139d7052e8ea543ae6cafbc3ca7dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorTilePrefab: {fileID: 0}
-  wallTilePrefab: {fileID: 0}
-  fogTilePrefab: {fileID: 0}
+  floorNoneTilePrefab: {fileID: 124548, guid: 211d4489fd6fc064ca89ba71aad7bc67, type: 2}
+  floorTilePrefab: {fileID: 159256, guid: da0f3295267b9ac4fbb59f4aecf2ab11, type: 2}
+  floorBonesTilePrefab: {fileID: 133030, guid: 44844747210d4bd4eb1aeffa20aa9452, type: 2}
+  floorRoomTilePrefab: {fileID: 121636, guid: 985cf2680aaaa6c4fb93a5c2d6ea0067, type: 2}
+  wallTilePrefab: {fileID: 113768, guid: 1b2d2933b10223347a129189fe078bf7, type: 2}
+  wallBonesTilePrefab: {fileID: 123880, guid: 98ab722508931824f92309122ba3a40e, type: 2}
+  wallRoomTilePrefab: {fileID: 178478, guid: 4b3239ffe3c43734f977284d3bb6ac70, type: 2}
+  wallDragonTilePrefab: {fileID: 122730, guid: 6f730246e9796f5468022a6da417683f, type: 2}
+  wallRockTilePrefab: {fileID: 163030, guid: 34b639039c1b9f54e9e667ec3c41a8bb, type: 2}
+  fogTilePrefab: {fileID: 114574, guid: 22a35a62f8ce92c4781f46d45273190e, type: 2}
+  fogRockTilePrefab: {fileID: 149940, guid: ea18f3ab6c673e54e8467d331eec535f, type: 2}
 --- !u!4 &83368218
 Transform:
   m_ObjectHideFlags: 0
