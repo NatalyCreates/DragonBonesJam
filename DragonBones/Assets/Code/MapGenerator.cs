@@ -63,7 +63,6 @@ public class MapGenerator : MonoBehaviour {
 			if (_set) {
 				Debug.Log ("Warning! Tile " + _id.ToString() + " was already given a type, setting again anyway.");
 			}
-			Debug.Log ("Setting tile " + _id.ToString());
 			
 			_typeFloor = typeFloor;
 			_typeWall = typeWall;
@@ -115,14 +114,11 @@ public class MapGenerator : MonoBehaviour {
 			}
 			
 			_set = true;
-			Debug.Log ("_set = " + _set.ToString());
 		}
 		public void CreateDraw () {
 			
-			Debug.Log ("_set = " + _set.ToString());
-			
 			if (!_set) {
-				Debug.Log ("Trying to create tile " + _id.ToString() + " before its type was set.");
+				Debug.Log ("Abort! Trying to create tile " + _id.ToString() + " before its type was set.");
 			}
 			else {
 				AddTile(_posX, _posY, TileLayer.FLOOR, _prefabFloor, _id);
@@ -165,18 +161,18 @@ public class MapGenerator : MonoBehaviour {
 
 		// Init prefabs
 
-		floorNoneTilePrefab = Resources.Load("FloorNoneTilePrefab") as GameObject;
-		floorTilePrefab = Resources.Load("FloorTilePrefab") as GameObject;
-		floorBonesTilePrefab = Resources.Load("FloorBonesTilePrefab") as GameObject;
-		floorRoomTilePrefab = Resources.Load("FloorRoomTilePrefab") as GameObject;
-		wallTilePrefab = Resources.Load("WallTilePrefab") as GameObject;
-		wallBonesTilePrefab = Resources.Load("WallBonesTilePrefab") as GameObject;
-		wallRoomTilePrefab = Resources.Load("WallRoomTilePrefab") as GameObject;
-		wallDragonTilePrefab = Resources.Load("WallDragonTilePrefab") as GameObject;
-		wallDragonEnterTilePrefab = Resources.Load("WallDragonEnterTilePrefab") as GameObject;
-		wallRockTilePrefab = Resources.Load("WallRockTilePrefab") as GameObject;
-		fogTilePrefab = Resources.Load("FogTilePrefab") as GameObject;
-		fogRockTilePrefab = Resources.Load("FogRockTilePrefab") as GameObject;
+		floorNoneTilePrefab = Resources.Load("Prefabs/FloorNoneTilePrefab") as GameObject;
+		floorTilePrefab = Resources.Load("Prefabs/FloorTilePrefab") as GameObject;
+		floorBonesTilePrefab = Resources.Load("Prefabs/FloorBonesTilePrefab") as GameObject;
+		floorRoomTilePrefab = Resources.Load("Prefabs/FloorRoomTilePrefab") as GameObject;
+		wallTilePrefab = Resources.Load("Prefabs/WallTilePrefab") as GameObject;
+		wallBonesTilePrefab = Resources.Load("Prefabs/WallBonesTilePrefab") as GameObject;
+		wallRoomTilePrefab = Resources.Load("Prefabs/WallRoomTilePrefab") as GameObject;
+		wallDragonTilePrefab = Resources.Load("Prefabs/WallDragonTilePrefab") as GameObject;
+		wallDragonEnterTilePrefab = Resources.Load("Prefabs/WallDragonEnterTilePrefab") as GameObject;
+		wallRockTilePrefab = Resources.Load("Prefabs/WallRockTilePrefab") as GameObject;
+		fogTilePrefab = Resources.Load("Prefabs/FogTilePrefab") as GameObject;
+		fogRockTilePrefab = Resources.Load("Prefabs/FogRockTilePrefab") as GameObject;
 
 		GenerateMap(0);
 	}
