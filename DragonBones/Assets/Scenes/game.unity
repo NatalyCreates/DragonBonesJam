@@ -125,7 +125,7 @@ MonoBehaviour:
   tilePrefab5: {fileID: 131214, guid: dbc118bd405c16940a0ad3ca463d37f8, type: 2}
   tilePrefab6: {fileID: 117984, guid: ca7d5566402e498439c6597cc571a74d, type: 2}
   tilePrefab7: {fileID: 110232, guid: 9eaff0f0355995d41842d291910e94fa, type: 2}
-  tilePrefab8: {fileID: 155736, guid: 8d32f02467a4ebb48b3449f3de24eced, type: 2}
+  tilePrefab8: {fileID: 146930, guid: 059040ea7b47b114d99de9d1f8d2a3e4, type: 2}
 --- !u!4 &83368218
 Transform:
   m_ObjectHideFlags: 0
