@@ -16,7 +16,7 @@ public class DragonGame : MonoBehaviour {
 	public Player localPlayer = new Player();
 	public Vector2 mapBounds;
 	public const float tileWidth = 256.0f;
-	public const float tileHeight = 256f.0f;
+	public const float tileHeight = 256.0f;
 	public const float maxTileNeighborDistance = 1.1 * Mathf.Sqrt(2 * Mathf.Pow(tileWidth, 2)); // should be a bit more than the distance from the center of a tile to the nearest point on its diagonally adjacent neighbors
 
 	void Start () {
