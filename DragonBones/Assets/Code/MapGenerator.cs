@@ -51,7 +51,7 @@ public class MapGenerator : MonoBehaviour {
 	int sortingCount = 0;
 	int rows = 0;
 
-	//List<int> tileMap =  new List<int>();
+	List<int> tileMap =  new List<int>();
 
 	//Tile tileScriptRef;
 
@@ -99,7 +99,6 @@ public class MapGenerator : MonoBehaviour {
 			
 			// even number of rows
 			if (totalRows % 2 == 0) {
-				Debug.Log("Even number of rows, totalRows/2 = " + totalRows/2);
 				// first half
 				if (curRow < totalRows/2 - 1) {
 					nextRowLen = nextRowLen + rowIncRate;
@@ -110,9 +109,9 @@ public class MapGenerator : MonoBehaviour {
 				}
 				// first row of second half
 				else if (curRow == totalRows/2 - 1) {
-					nextRowLen = nextRowLen;
-					xpos = xpos;
-					ypos = ypos;
+					//nextRowLen = nextRowLen;
+					//xpos = xpos;
+					//ypos = ypos;
 				}
 				// second half
 				else {
@@ -123,9 +122,8 @@ public class MapGenerator : MonoBehaviour {
 					}
 				}
 			}
-			// odd number of rows
+			// odd number of rows, total/2 is rounded down
 			else {
-				Debug.Log("Odd number of rows, totalRows/2 = " + totalRows/2); // rounded down
 				// first half
 				if (curRow < totalRows/2) {
 					nextRowLen = nextRowLen + rowIncRate;
@@ -166,8 +164,6 @@ public class MapGenerator : MonoBehaviour {
 			
 			// even number of rows
 			if (totalRows % 2 == 0) {
-				Debug.Log("Even number of rows, totalRows/2 = " + totalRows/2);
-
 				// first half
 				if (curRow < totalRows/2 - sideLen/2) {
 					nextRowLen = nextRowLen + rowIncRate;
@@ -178,9 +174,9 @@ public class MapGenerator : MonoBehaviour {
 				}
 				// first row of second half
 				else if ((curRow >= totalRows/2 - sideLen/2) && (curRow < totalRows/2 + sideLen/2 - 1)) {
-					nextRowLen = nextRowLen;
-					xpos = xpos;
-					ypos = ypos;
+					//nextRowLen = nextRowLen;
+					//xpos = xpos;
+					//ypos = ypos;
 				}
 				// second half
 				else {
@@ -191,9 +187,8 @@ public class MapGenerator : MonoBehaviour {
 					}
 				}
 			}
-			// odd number of rows
+			// odd number of rows, total/2 is rounded down
 			else {
-				Debug.Log("Odd number of rows, totalRows/2 = " + totalRows/2); // rounded down
 				// first half
 				if (curRow < totalRows/2 - sideLen/2 + 1) {
 					nextRowLen = nextRowLen + rowIncRate;
@@ -204,9 +199,9 @@ public class MapGenerator : MonoBehaviour {
 				}
 				// first row of second half
 				else if ((curRow >= totalRows/2 - sideLen/2 + 1) && (curRow < totalRows/2 + sideLen/2 - 1)) {
-					nextRowLen = nextRowLen;
-					xpos = xpos;
-					ypos = ypos;
+					//nextRowLen = nextRowLen;
+					//xpos = xpos;
+					//ypos = ypos;
 				}
 				// second half
 				else {
@@ -235,7 +230,8 @@ public class MapGenerator : MonoBehaviour {
 		// Make sure to preserve the order of random generation
 
 		// usually best to use half of number of rows as side len
-		MakeHexMap(50,25);
+		//MakeHexMap(18,9);
+		MakeHexMap(5,2);
 
 	}
 
