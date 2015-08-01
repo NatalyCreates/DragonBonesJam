@@ -12,7 +12,7 @@ GameObject:
   - 114: {fileID: 11492512}
   - 60: {fileID: 6026774}
   m_Layer: 0
-  m_Name: WallDragonEnterRightTilePrefab
+  m_Name: WallDragonEnterTilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

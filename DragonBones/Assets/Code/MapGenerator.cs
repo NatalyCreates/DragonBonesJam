@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 public class MapGenerator : MonoBehaviour {
 
-	enum TileLayer {
+	public enum TileLayer {
 		FLOOR,
 		WALL,
 		FOG,
 	};
-
-	enum TileType {
+	
+	public enum TileType {
 		FLOOR_NONE,
 		FLOOR,
 		FLOOR_BONES,
@@ -20,14 +20,14 @@ public class MapGenerator : MonoBehaviour {
 		WALL_BONES,
 		WALL_ROOM,
 		WALL_DRAGON,
+		WALL_DRAGON_ENTER,
 		WALL_ROCK,
 		FOG,
 		FOG_ROCK,
+		UNSET,
 	};
-
-	int uniqueIdCounter = 0;
-
-	struct TileLayered {
+	
+	public class TileLayered {
 		public int _id;
 		public bool _drawn;
 		public bool _set;
@@ -41,28 +41,34 @@ public class MapGenerator : MonoBehaviour {
 		public GameObject _prefabFog;
 		public float _posX;
 		public float _posY;
-
+		
 		public TileLayered (int id, int row, int col, float posX, float posY) {
 			_id = id;
 			_row = row;
 			_col = col;
 			_posX = posX;
 			_posY = posY;
-			_typeFloor = -1;
-			_typeWall = -1;
-			_typeFog = -1;
+			_typeFloor = TileType.UNSET;
+			_typeWall = TileType.UNSET;
+			_typeFog = TileType.UNSET;
 			_prefabFloor = null;
 			_prefabWall = null;
 			_prefabFog = null;
 			_drawn = false;
 			_set = false;
 		}
-
+		
 		public void SetType (TileType typeFloor, TileType typeWall, TileType typeFog) {
+			
+			if (_set) {
+				Debug.Log ("Warning! Tile " + _id.ToString() + " was already given a type, setting again anyway.");
+			}
+			Debug.Log ("Setting tile " + _id.ToString());
+			
 			_typeFloor = typeFloor;
 			_typeWall = typeWall;
 			_typeFog = typeFog;
-
+			
 			switch (_typeFloor) {
 			case TileType.FLOOR_NONE:
 				_prefabFloor = floorNoneTilePrefab;
@@ -77,7 +83,7 @@ public class MapGenerator : MonoBehaviour {
 				_prefabFloor = floorRoomTilePrefab;
 				break;
 			}
-
+			
 			switch (_typeWall) {
 			case TileType.WALL:
 				_prefabWall = wallTilePrefab;
@@ -91,11 +97,14 @@ public class MapGenerator : MonoBehaviour {
 			case TileType.WALL_DRAGON:
 				_prefabWall = wallDragonTilePrefab;
 				break;
+			case TileType.WALL_DRAGON_ENTER:
+				_prefabWall = wallDragonEnterTilePrefab;
+				break;
 			case TileType.WALL_ROCK:
 				_prefabWall = wallRockTilePrefab;
 				break;
 			}
-
+			
 			switch (_typeFog) {
 			case TileType.FOG:
 				_prefabFog = fogTilePrefab;
@@ -104,55 +113,71 @@ public class MapGenerator : MonoBehaviour {
 				_prefabFog = fogRockTilePrefab;
 				break;
 			}
-
+			
 			_set = true;
+			Debug.Log ("_set = " + _set.ToString());
 		}
 		public void CreateDraw () {
-
-			AddTile(_posX, _posY, TileLayer.FLOOR, _prefabFloor, _id);
-			AddTile(_posX, _posY, TileLayer.WALL, _prefabWall, _id);
-			AddTile(_posX, _posY, TileLayer.FOG, _prefabFog, _id);
-
-			GameObject floorFind = GameObject.Find ("Tile Floor " + id.ToString());
-			GameObject fogFind = GameObject.Find ("Tile Fog " + id.ToString());
-			floorFind.transform.parent = GameObject.Find("Tile Wall " + id.ToString()).transform;
-			fogFind.transform.parent = GameObject.Find("Tile Wall " + id.ToString()).transform;
-			floorFind.name = "Floor";
-			fogFind.name = "Fog";
-
-			_drawn = true;
+			
+			Debug.Log ("_set = " + _set.ToString());
+			
+			if (!_set) {
+				Debug.Log ("Trying to create tile " + _id.ToString() + " before its type was set.");
+			}
+			else {
+				AddTile(_posX, _posY, TileLayer.FLOOR, _prefabFloor, _id);
+				AddTile(_posX, _posY, TileLayer.WALL, _prefabWall, _id);
+				AddTile(_posX, _posY, TileLayer.FOG, _prefabFog, _id);
+				
+				GameObject floorFind = GameObject.Find ("Tile Floor " + _id.ToString());
+				GameObject fogFind = GameObject.Find ("Tile Fog " + _id.ToString());
+				floorFind.transform.parent = GameObject.Find("Tile Wall " + _id.ToString()).transform;
+				fogFind.transform.parent = GameObject.Find("Tile Wall " + _id.ToString()).transform;
+				floorFind.name = "Floor";
+				fogFind.name = "Fog";
+				
+				_drawn = true;
+			}
 		}
 	}
 
-	//GameObject tilePrefab;
+	int uniqueIdCounter = 0;
 
-	public GameObject floorNoneTilePrefab;
-	public GameObject floorTilePrefab;
-	public GameObject floorBonesTilePrefab;
-	public GameObject floorRoomTilePrefab;
-	public GameObject wallTilePrefab;
-	public GameObject wallBonesTilePrefab;
-	public GameObject wallRoomTilePrefab;
-	public GameObject wallDragonTilePrefab;
-	public GameObject wallRockTilePrefab;
-	public GameObject fogTilePrefab;
-	public GameObject fogRockTilePrefab;
+	public static GameObject floorNoneTilePrefab;
+	public static GameObject floorTilePrefab;
+	public static GameObject floorBonesTilePrefab;
+	public static GameObject floorRoomTilePrefab;
+	public static GameObject wallTilePrefab;
+	public static GameObject wallBonesTilePrefab;
+	public static GameObject wallRoomTilePrefab;
+	public static GameObject wallDragonTilePrefab;
+	public static GameObject wallDragonEnterTilePrefab;
+	public static GameObject wallRockTilePrefab;
+	public static GameObject fogTilePrefab;
+	public static GameObject fogRockTilePrefab;
 
-	float xpos;
-	float ypos;
-	GameObject newTile;
-
-	int sortingCount = -1;
+	static int sortingCount = -1;
 
 	List<List<TileLayered>> tileMap =  new List<List<TileLayered>>();
 
-	//Tile tileScriptRef;
-
 	// Use this for initialization
 	void Start () {
-		xpos = 0;
-		ypos = 0;
-		position = new Vector2(xpos, ypos);
+
+		// Init prefabs
+
+		floorNoneTilePrefab = Resources.Load("FloorNoneTilePrefab") as GameObject;
+		floorTilePrefab = Resources.Load("FloorTilePrefab") as GameObject;
+		floorBonesTilePrefab = Resources.Load("FloorBonesTilePrefab") as GameObject;
+		floorRoomTilePrefab = Resources.Load("FloorRoomTilePrefab") as GameObject;
+		wallTilePrefab = Resources.Load("WallTilePrefab") as GameObject;
+		wallBonesTilePrefab = Resources.Load("WallBonesTilePrefab") as GameObject;
+		wallRoomTilePrefab = Resources.Load("WallRoomTilePrefab") as GameObject;
+		wallDragonTilePrefab = Resources.Load("WallDragonTilePrefab") as GameObject;
+		wallDragonEnterTilePrefab = Resources.Load("WallDragonEnterTilePrefab") as GameObject;
+		wallRockTilePrefab = Resources.Load("WallRockTilePrefab") as GameObject;
+		fogTilePrefab = Resources.Load("FogTilePrefab") as GameObject;
+		fogRockTilePrefab = Resources.Load("FogRockTilePrefab") as GameObject;
+
 		GenerateMap(0);
 	}
 
@@ -170,25 +195,11 @@ public class MapGenerator : MonoBehaviour {
 				tileMap[i][j].CreateDraw();
 			}
 		}
-
-		for (int i = 0; i < tileMap.Count; i++) {
-			for (int j = 0; j < tileMap[i].Count; j++) {
-				int id = tileMap[i][j]._id;
-				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FLOOR, TileType.FLOOR_ROOM, id);
-				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.WALL, TileType.WALL_ROOM, id);
-				AddTile(tileMap[i][j]._posX, tileMap[i][j]._posY, TileLayer.FOG, TileType.FOG, id);
-				GameObject floorFind = GameObject.Find ("Tile Floor " + id.ToString());
-				GameObject fogFind = GameObject.Find ("Tile Fog " + id.ToString());
-				floorFind.transform.parent = GameObject.Find("Tile Wall " + id.ToString()).transform;
-				fogFind.transform.parent = GameObject.Find("Tile Wall " + id.ToString()).transform;
-				floorFind.name = "Floor";
-				fogFind.name = "Fog";
-			}
-		}
 	}
 
 	void MakeDiamondMap(int rowLen = 6, int totalRows = 6) {
 		int curRow, curTile;
+		float xpos = 0, ypos = 0;
 
 		for (curRow = 0; curRow < totalRows; curRow++) {
 			List<TileLayered> tempTileList = new List<TileLayered>();
@@ -196,7 +207,6 @@ public class MapGenerator : MonoBehaviour {
 				xpos = xpos + (DragonGame.tileWidth / 2);
 				ypos = ypos - (DragonGame.tileHeight / 4);
 				tempTileList.Add(new TileLayered(GetNextId(), curRow, curTile, xpos, ypos));
-				//AddTile(xpos, ypos);
 			}
 			tileMap.Add(tempTileList);
 			tempTileList = new List<TileLayered>();
@@ -209,16 +219,19 @@ public class MapGenerator : MonoBehaviour {
 	void MakeHexMap(int totalRows = 8, int sideLen = 5) {
 		
 		int rowIncRate = 2; // can only be even (for a symmetrical map)!! (usually 2 is best)
-		
 		int nextRowLen = sideLen;
 		int curRow, curTile;
+		float xpos = 0, ypos = 0;
 		
 		for (curRow = 0; curRow < totalRows; curRow++) {
+			List<TileLayered> tempTileList = new List<TileLayered>();
 			for (curTile = 0; curTile < nextRowLen; curTile++) {
 				xpos = xpos + (DragonGame.tileWidth / 2);
 				ypos = ypos - (DragonGame.tileHeight / 4);
-				//AddTile(xpos, ypos);
+				tempTileList.Add(new TileLayered(GetNextId(), curRow, curTile, xpos, ypos));
 			}
+			tileMap.Add(tempTileList);
+			tempTileList = new List<TileLayered>();
 			// move pointer back to start
 			xpos = xpos - ((nextRowLen + 1) * (DragonGame.tileWidth / 2));
 			ypos = ypos + ((nextRowLen - 1) * (DragonGame.tileHeight / 4));
@@ -271,16 +284,19 @@ public class MapGenerator : MonoBehaviour {
 	void MakeOctMap(int totalRows = 15, int sideLen = 4) {
 		
 		int rowIncRate = 2; // can only be even (for a symmetrical map)!! (usually 2 is best)
-		
 		int nextRowLen = sideLen;
 		int curRow, curTile;
+		float xpos = 0, ypos = 0;
 		
 		for (curRow = 0; curRow < totalRows; curRow++) {
+			List<TileLayered> tempTileList = new List<TileLayered>();
 			for (curTile = 0; curTile < nextRowLen; curTile++) {
 				xpos = xpos + (DragonGame.tileWidth / 2);
 				ypos = ypos - (DragonGame.tileHeight / 4);
-				//AddTile(xpos, ypos);
+				tempTileList.Add(new TileLayered(GetNextId(), curRow, curTile, xpos, ypos));
 			}
+			tileMap.Add(tempTileList);
+			tempTileList = new List<TileLayered>();
 			// move pointer back to start
 			xpos = xpos - ((nextRowLen + 1) * (DragonGame.tileWidth / 2));
 			ypos = ypos + ((nextRowLen - 1) * (DragonGame.tileHeight / 4));
@@ -348,45 +364,16 @@ public class MapGenerator : MonoBehaviour {
 		// Make sure to preserve the order of random generation
 		// usually best to use half of number of rows as side len
 
-		//MakeHexMap(18,9);
-		MakeDiamondMap(10,10);
+		// DO NOT generate more than one map in each game - they will overlap and make a mess
+
+		MakeHexMap(18,9);
+		//MakeDiamondMap(10,10);
+
 		IterateTileMapAndCreate();
 	}
-	/*
-	void PickRandomTile () {
-		int tile = Random.Range(4,9);
-		switch (tile) {
-		case 1:
-			tilePrefab = tilePrefab1;
-			break;
-		case 2:
-			tilePrefab = tilePrefab2;
-			break;
-		case 3:
-			tilePrefab = tilePrefab3;
-			break;
-		case 4:
-			tilePrefab = tilePrefab4;
-			break;
-		case 5:
-			tilePrefab = tilePrefab5;
-			break;
-		case 6:
-			tilePrefab = tilePrefab6;
-			break;
-		case 7:
-			tilePrefab = tilePrefab7;
-			break;
-		case 8:
-			tilePrefab = tilePrefab8;
-			break;
-		default:
-			tilePrefab = tilePrefab1;
-			break;
-		}
-	}*/
 
-	void AddTile (float x, float y, TileLayer tileLayer, GameObject tilePrefab, int tileId) {
+	static void AddTile (float x, float y, TileLayer tileLayer, GameObject tilePrefab, int tileId) {
+		GameObject newTile;
 		Vector2 position;
 		position.x = x;
 		position.y = y;
@@ -395,7 +382,6 @@ public class MapGenerator : MonoBehaviour {
 
 		switch (tileLayer) {
 		case TileLayer.FLOOR:
-			//GameObject.Find ("Tile 28/Floor");
 			newName = "Tile Floor " + tileId.ToString();
 			break;
 		case TileLayer.WALL:
@@ -409,80 +395,10 @@ public class MapGenerator : MonoBehaviour {
 		Basics.assert(GameObject.Find(newName) == null);
 		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
 		newTile.name = newName;
-		newTile.transform.parent = gameObject.transform;
+		//newTile.transform.parent = gameObject.transform;
 		newTile.GetComponent<SpriteRenderer>().sortingOrder = sortingCount;
 		sortingCount++;
 	}
-	/*
-	void AddTileOld (float x, float y, TileLayer tileLayer, TileType tileType, int tileId) {
-		position.x = x;
-		position.y = y;
-		
-		string newName = "Tile JustInCase " + sortingCount.ToString();
-		
-		switch (tileLayer) {
-		case TileLayer.FLOOR:
-			//GameObject.Find ("Tile 28/Floor");
-			newName = "Tile Floor " + tileId.ToString();
-			break;
-		case TileLayer.WALL:
-			newName = "Tile Wall " + tileId.ToString();
-			break;
-		case TileLayer.FOG:
-			newName = "Tile Fog " + tileId.ToString();
-			break;
-		}
-		
-		switch (tileType) {
-		case TileType.FLOOR_NONE:
-			tilePrefab = floorNoneTilePrefab;
-			break;
-		case TileType.FLOOR:
-			tilePrefab = floorTilePrefab;
-			break;
-		case TileType.FLOOR_BONES:
-			tilePrefab = floorBonesTilePrefab;
-			break;
-		case TileType.FLOOR_ROOM:
-			tilePrefab = floorRoomTilePrefab;
-			break;
-		case TileType.WALL:
-			tilePrefab = wallTilePrefab;
-			break;
-		case TileType.WALL_BONES:
-			tilePrefab = wallBonesTilePrefab;
-			break;
-		case TileType.WALL_ROOM:
-			tilePrefab = wallRoomTilePrefab;
-			break;
-		case TileType.WALL_DRAGON:
-			tilePrefab = wallDragonTilePrefab;
-			break;
-		case TileType.WALL_ROCK:
-			tilePrefab = wallRockTilePrefab;
-			break;
-		case TileType.FOG:
-			tilePrefab = fogTilePrefab;
-			break;
-		case TileType.FOG_ROCK:
-			tilePrefab = fogRockTilePrefab;
-			break;
-		}
-		
-		//newName = "Tile " + sortingCount.ToString();
-		Basics.assert(GameObject.Find(newName) == null);
-		newTile = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
-		newTile.name = newName;
-		newTile.transform.parent = gameObject.transform;
-		newTile.GetComponent<SpriteRenderer>().sortingOrder = sortingCount;
-		if (tileLayer == TileLayer.FLOOR) {
-			
-		}
-		
-		sortingCount++;
-	}
-	*/
-
 
 	// Update is called once per frame
 	void Update () {
