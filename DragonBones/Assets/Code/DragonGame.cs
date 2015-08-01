@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class Player {
 	/// Digging power per round
 	public IList<Incantation> actionsTaken = new List<Incantation>();
-	public int maxShovels = 1000;
-	public int shovels = 1000;
+	public int maxShovels = 1000; // TEMP: DIGGING OVERWHELMING
+	public int shovels = 1000; // TEMP: DIGGING OVERWHELMING
 
 	public bool turnTaken = false;
 }
@@ -15,6 +15,9 @@ public class DragonGame : MonoBehaviour {
 	public static DragonGame instance;
 	public Player localPlayer = new Player();
 	public Vector2 mapBounds;
+	public const float tileWidth = 256.0f;
+	public const float tileHeight = 256.0f;
+	public const float maxTileNeighborDistance = 1.1 * Mathf.Sqrt(2 * Mathf.Pow(tileWidth, 2)); // should be a bit more than the distance from the center of a tile to the nearest point on its diagonally adjacent neighbors
 
 	public const float tileWidth = 256.0f;
 	public const float tileHeight = 256.0f;
@@ -22,25 +25,32 @@ public class DragonGame : MonoBehaviour {
 	void Start () {
 		Basics.assert(!instance);
 		instance = this;
+
+
 	}
 
 	public void EndTurn() {
-
 		if (!Network.instance.started) {
 			Basics.Log("End turn? I've hardly started!");
 			return;
 		}
-		if (localPlayer.turnTaken)
+		if (localPlayer.turnTaken) {
+			Basics.Log ("End turn? It's already ogre.");
 			return; // can this happen? Can we process more than one click per Unity update, or could we get another update
 					// call before the previous one returns?
+		}
+		Basics.Log ("It's all ogre.");
 		localPlayer.turnTaken = true;
+		Network.instance.SendActions();
 	}
 	
 	/// @arg repeating If true, we are repeating an already-confirmed action (from the other player's client)
 	/// @note All local player actions should be executed via this method (hence TryDig() etc. are private)
 	public void ProcessAction(Incantation action, bool repeating = false) {
-		if (localPlayer.turnTaken)
+		if (localPlayer.turnTaken && !repeating) {
+			Basics.Log("Unable to comply; turn not in progress");
 			return; // no actions until next turn
+		}
 
 		bool result = false;
 
@@ -84,4 +94,8 @@ public class DragonGame : MonoBehaviour {
 	private bool TryDig(string tileName) {
 		return TryDig (GameObject.Find(tileName).GetComponent<Tile>());
 	}	 
+
+	private void TryReveal(Tile tile) {
+
+	}
 }
