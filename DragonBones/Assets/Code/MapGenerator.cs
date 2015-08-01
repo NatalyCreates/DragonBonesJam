@@ -37,8 +37,8 @@ public class MapGenerator : MonoBehaviour {
 	public GameObject tilePrefab7;
 	public GameObject tilePrefab8;
 
-	float tileSizeX = 256.0f;
-	float tileSizeY = 256.0f;
+	//float tileSizeX = 256.0f;
+	//float tileSizeY = 256.0f;
 
 	float tileWidth = 256.0f;
 	float tileHeight = 256.0f;
@@ -51,9 +51,9 @@ public class MapGenerator : MonoBehaviour {
 	int sortingCount = 0;
 	int rows = 0;
 
-	List<int> tileMap =  new List<int>();
+	//List<int> tileMap =  new List<int>();
 
-	Tile tileScriptRef;
+	//Tile tileScriptRef;
 
 	// Use this for initialization
 	void Start () {
@@ -62,6 +62,170 @@ public class MapGenerator : MonoBehaviour {
 		position = new Vector2(xpos, ypos);
 		GenerateMap(0);
 	}
+
+	void MakeDiamondMap() {
+		int rowLen = 6;
+		int totalRows = 6;
+		int curRow, curTile;
+
+		for (curRow = 0; curRow < totalRows; curRow++) {
+			for (curTile = 0; curTile < rowLen; curTile++) {
+				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
+				xpos = xpos + (tileWidth / 2);
+				ypos = ypos - (tileHeight / 4);
+				AddTile(xpos, ypos);
+			}
+			// move pointer back to start
+			xpos = xpos - ((rowLen + 1) * (tileWidth / 2));
+			ypos = ypos + ((rowLen - 1) * (tileHeight / 4));
+		}
+	}
+
+	void MakeHexMap() {
+		int totalRows = 8;
+		
+		int rowIncRate = 2; // can only be even (for a symmetrical map)!! (usually 2 is best)
+		int sideLen = 5;
+		
+		int nextRowLen = sideLen;
+		int curRow, curTile;
+		
+		for (curRow = 0; curRow < totalRows; curRow++) {
+			for (curTile = 0; curTile < nextRowLen; curTile++) {
+				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
+				xpos = xpos + (tileWidth / 2);
+				ypos = ypos - (tileHeight / 4);
+				AddTile(xpos, ypos);
+			}
+			// move pointer back to start
+			xpos = xpos - ((nextRowLen + 1) * (tileWidth / 2));
+			ypos = ypos + ((nextRowLen - 1) * (tileHeight / 4));
+			
+			// even number of rows
+			if (totalRows % 2 == 0) {
+				Debug.Log("Even number of rows, totalRows/2 = " + totalRows/2);
+				// first half
+				if (curRow < totalRows/2 - 1) {
+					nextRowLen = nextRowLen + rowIncRate;
+					for (int i = 0; i < rowIncRate/2; i++) {
+						xpos = xpos - (tileWidth / 2);
+						ypos = ypos + (tileHeight / 4);
+					}
+				}
+				// first row of second half
+				else if (curRow == totalRows/2 - 1) {
+					nextRowLen = nextRowLen;
+					xpos = xpos;
+					ypos = ypos;
+				}
+				// second half
+				else {
+					nextRowLen = nextRowLen - rowIncRate;
+					for (int i = 0; i < rowIncRate/2; i++) {
+						xpos = xpos + (tileWidth / 2);
+						ypos = ypos - (tileHeight / 4);
+					}
+				}
+			}
+			// odd number of rows
+			else {
+				Debug.Log("Odd number of rows, totalRows/2 = " + totalRows/2); // rounded down
+				// first half
+				if (curRow < totalRows/2) {
+					nextRowLen = nextRowLen + rowIncRate;
+					for (int i = 0; i < rowIncRate/2; i++) {
+						xpos = xpos - (tileWidth / 2);
+						ypos = ypos + (tileHeight / 4);
+					}
+				}
+				// second half
+				else {
+					nextRowLen = nextRowLen - rowIncRate;
+					for (int i = 0; i < rowIncRate/2; i++) {
+						xpos = xpos + (tileWidth / 2);
+						ypos = ypos - (tileHeight / 4);
+					}
+				}
+			}
+		}
+	}
+
+	void MakeOctMap() {
+		int totalRows = 15;
+		
+		int rowIncRate = 2; // can only be even (for a symmetrical map)!! (usually 2 is best)
+		int sideLen = 4;
+		
+		int nextRowLen = sideLen;
+		int curRow, curTile;
+		
+		for (curRow = 0; curRow < totalRows; curRow++) {
+			for (curTile = 0; curTile < nextRowLen; curTile++) {
+				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
+				xpos = xpos + (tileWidth / 2);
+				ypos = ypos - (tileHeight / 4);
+				AddTile(xpos, ypos);
+			}
+			// move pointer back to start
+			xpos = xpos - ((nextRowLen + 1) * (tileWidth / 2));
+			ypos = ypos + ((nextRowLen - 1) * (tileHeight / 4));
+			
+			// even number of rows
+			if (totalRows % 2 == 0) {
+				Debug.Log("Even number of rows, totalRows/2 = " + totalRows/2);
+
+				// first half
+				if (curRow < totalRows/2 - sideLen/2) {
+					nextRowLen = nextRowLen + rowIncRate;
+					for (int i = 0; i < rowIncRate/2; i++) {
+						xpos = xpos - (tileWidth / 2);
+						ypos = ypos + (tileHeight / 4);
+					}
+				}
+				// first row of second half
+				else if ((curRow >= totalRows/2 - sideLen/2) && (curRow < totalRows/2 + sideLen/2 - 1)) {
+					nextRowLen = nextRowLen;
+					xpos = xpos;
+					ypos = ypos;
+				}
+				// second half
+				else {
+					nextRowLen = nextRowLen - rowIncRate;
+					for (int i = 0; i < rowIncRate/2; i++) {
+						xpos = xpos + (tileWidth / 2);
+						ypos = ypos - (tileHeight / 4);
+					}
+				}
+			}
+			// odd number of rows
+			else {
+				Debug.Log("Odd number of rows, totalRows/2 = " + totalRows/2); // rounded down
+				// first half
+				if (curRow < totalRows/2 - sideLen/2 + 1) {
+					nextRowLen = nextRowLen + rowIncRate;
+					for (int i = 0; i < rowIncRate/2; i++) {
+						xpos = xpos - (tileWidth / 2);
+						ypos = ypos + (tileHeight / 4);
+					}
+				}
+				// first row of second half
+				else if ((curRow >= totalRows/2 - sideLen/2 + 1) && (curRow < totalRows/2 + sideLen/2 - 1)) {
+					nextRowLen = nextRowLen;
+					xpos = xpos;
+					ypos = ypos;
+				}
+				// second half
+				else {
+					nextRowLen = nextRowLen - rowIncRate;
+					for (int i = 0; i < rowIncRate/2; i++) {
+						xpos = xpos + (tileWidth / 2);
+						ypos = ypos - (tileHeight / 4);
+					}
+				}
+			}
+		}
+	}
+
 
 	[PunRPC]
 	void GenerateMap (int seed) {
@@ -76,75 +240,9 @@ public class MapGenerator : MonoBehaviour {
 
 		// Make sure to preserve the order of random generation
 
-		//int rowLen = 6;
-
-		int totalRows = 10;
-
-		int firstRowLen = 4;
-		int nextRowLen = firstRowLen;
-		int curRow, curTile;
-
-		//float x = 0;
-		//float y = 0;
-
-		for (curRow = 0; curRow < totalRows; curRow++) {
-			//xpos = 0 - ((curRow) * tileWidth / 2);
-			//ypos = 0 - ((curRow) * tileWidth / 4);
-			for (curTile = 0; curTile < nextRowLen; curTile++) {
-				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
-				xpos = xpos + (tileWidth / 2);
-				ypos = ypos - (tileHeight / 4);
-				AddTile(xpos, ypos);
-			}
-			// move pointer back to start
-			//xpos = (xpos - ((rowLen) * (tileWidth / 2))) - (tileWidth / 2);
-			//ypos = (ypos + ((rowLen) * (tileHeight / 4))) - (tileHeight / 4);
-			xpos = xpos - ((nextRowLen + 1) * (tileWidth / 2));
-			ypos = ypos + ((nextRowLen - 1) * (tileHeight / 4));
-
-			// even number of rows
-			if (totalRows % 2 == 0) {
-				Debug.Log("Even number of rows, totalRows/2 = " + totalRows/2);
-				// first half
-				if (curRow < totalRows/2 - 1) {
-					nextRowLen = nextRowLen + firstRowLen;
-					for (int i = 0; i < firstRowLen/2; i++) {
-						xpos = xpos - (tileWidth / 2);
-						ypos = ypos + (tileHeight / 4);
-					}
-				}
-				// first row of second half
-				else if (curRow == totalRows/2 - 1) {
-					nextRowLen = nextRowLen;
-					xpos = xpos;
-					ypos = ypos;
-				}
-				// second half
-				else {
-					nextRowLen = nextRowLen - firstRowLen;
-					for (int i = 0; i < firstRowLen/2; i++) {
-						xpos = xpos + (tileWidth / 2);
-						ypos = ypos - (tileHeight / 4);
-					}
-				}
-			}
-			// odd number of rows
-			else {
-				Debug.Log("Odd number of rows, totalRows/2 = " + totalRows/2); // rounded down
-				// first half
-				if (curRow < totalRows/2) {
-					xpos = xpos - (tileWidth / 2);
-					ypos = ypos + (tileHeight / 4);
-					nextRowLen = nextRowLen + firstRowLen;
-				}
-				// second half
-				else {
-					xpos = xpos + (tileWidth / 2);
-					ypos = ypos - (tileHeight / 4);
-					nextRowLen = nextRowLen - firstRowLen;
-				}
-			}
-		}
+		//MakeDiamondMap();
+		MakeHexMap();
+		//MakeOctMap();
 
 	}
 
