@@ -37,9 +37,6 @@ public class MapGenerator : MonoBehaviour {
 	public GameObject tilePrefab7;
 	public GameObject tilePrefab8;
 
-	//float tileSizeX = 256.0f;
-	//float tileSizeY = 256.0f;
-
 	float tileWidth = 256.0f;
 	float tileHeight = 256.0f;
 
@@ -88,7 +85,6 @@ public class MapGenerator : MonoBehaviour {
 		
 		for (curRow = 0; curRow < totalRows; curRow++) {
 			for (curTile = 0; curTile < nextRowLen; curTile++) {
-				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
 				xpos = xpos + (tileWidth / 2);
 				ypos = ypos - (tileHeight / 4);
 				AddTile(xpos, ypos);
@@ -109,9 +105,7 @@ public class MapGenerator : MonoBehaviour {
 				}
 				// first row of second half
 				else if (curRow == totalRows/2 - 1) {
-					//nextRowLen = nextRowLen;
-					//xpos = xpos;
-					//ypos = ypos;
+					// don't inc xpos, ypos or nextRowLen, since we want a few rows that are the same
 				}
 				// second half
 				else {
@@ -153,7 +147,6 @@ public class MapGenerator : MonoBehaviour {
 		
 		for (curRow = 0; curRow < totalRows; curRow++) {
 			for (curTile = 0; curTile < nextRowLen; curTile++) {
-				// choose the right type of tile from the tilemap matric (by int in the list I guess..)
 				xpos = xpos + (tileWidth / 2);
 				ypos = ypos - (tileHeight / 4);
 				AddTile(xpos, ypos);
@@ -174,9 +167,7 @@ public class MapGenerator : MonoBehaviour {
 				}
 				// first row of second half
 				else if ((curRow >= totalRows/2 - sideLen/2) && (curRow < totalRows/2 + sideLen/2 - 1)) {
-					//nextRowLen = nextRowLen;
-					//xpos = xpos;
-					//ypos = ypos;
+					// don't inc xpos, ypos or nextRowLen, since we want a few rows that are the same
 				}
 				// second half
 				else {
@@ -199,9 +190,7 @@ public class MapGenerator : MonoBehaviour {
 				}
 				// first row of second half
 				else if ((curRow >= totalRows/2 - sideLen/2 + 1) && (curRow < totalRows/2 + sideLen/2 - 1)) {
-					//nextRowLen = nextRowLen;
-					//xpos = xpos;
-					//ypos = ypos;
+					// don't inc xpos, ypos or nextRowLen, since we want a few rows that are the same
 				}
 				// second half
 				else {
@@ -230,8 +219,8 @@ public class MapGenerator : MonoBehaviour {
 		// Make sure to preserve the order of random generation
 
 		// usually best to use half of number of rows as side len
-		//MakeHexMap(18,9);
-		MakeHexMap(5,2);
+
+		MakeHexMap(18,9);
 
 	}
 
