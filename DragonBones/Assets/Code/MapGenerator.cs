@@ -63,9 +63,7 @@ public class MapGenerator : MonoBehaviour {
 		GenerateMap(0);
 	}
 
-	void MakeDiamondMap() {
-		int rowLen = 6;
-		int totalRows = 6;
+	void MakeDiamondMap(int rowLen = 6, int totalRows = 6) {
 		int curRow, curTile;
 
 		for (curRow = 0; curRow < totalRows; curRow++) {
@@ -81,11 +79,9 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
-	void MakeHexMap() {
-		int totalRows = 8;
+	void MakeHexMap(int totalRows = 8, int sideLen = 5) {
 		
 		int rowIncRate = 2; // can only be even (for a symmetrical map)!! (usually 2 is best)
-		int sideLen = 5;
 		
 		int nextRowLen = sideLen;
 		int curRow, curTile;
@@ -150,11 +146,9 @@ public class MapGenerator : MonoBehaviour {
 		}
 	}
 
-	void MakeOctMap() {
-		int totalRows = 15;
+	void MakeOctMap(int totalRows = 15, int sideLen = 4) {
 		
 		int rowIncRate = 2; // can only be even (for a symmetrical map)!! (usually 2 is best)
-		int sideLen = 4;
 		
 		int nextRowLen = sideLen;
 		int curRow, curTile;
@@ -240,9 +234,8 @@ public class MapGenerator : MonoBehaviour {
 
 		// Make sure to preserve the order of random generation
 
-		//MakeDiamondMap();
-		MakeHexMap();
-		//MakeOctMap();
+		// usually best to use half of number of rows as side len
+		MakeHexMap(50,25);
 
 	}
 
