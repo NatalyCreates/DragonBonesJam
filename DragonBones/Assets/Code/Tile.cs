@@ -12,8 +12,8 @@ public class Tile : MonoBehaviour {
 		if (hidden)
 			Reveal();
 
-		GetComponent<Collider2D>().gameObject.SetActive(false);
-		GetComponent<Renderer>().gameObject.SetActive(false);
+		GetComponent<Collider2D>().enabled = false;
+		GetComponent<Renderer>().enabled = false;
 
 		Basics.assert(dug);
 	}
@@ -28,7 +28,7 @@ public class Tile : MonoBehaviour {
 
 	public bool dug {
 		get {
-			return !GetComponent<Collider2D>().gameObject.GetActive();
+			return !GetComponent<Collider2D>().enabled;
 		}
 	} 
 
@@ -38,9 +38,9 @@ public class Tile : MonoBehaviour {
 		}
 	}
 
+	/// TODO: this won't work for isometric maps, gotta reimplement
 	public HashSet<Tile> neighbors {
 		get {
-
 			// Assume we're a standard-sized (square) tile. Further assume our anchor is in the top left (sprite extends
 			// in the +x and +y directions)
 			Basics.assert(DragonGame.tileWidth == DragonGame.tileHeight);

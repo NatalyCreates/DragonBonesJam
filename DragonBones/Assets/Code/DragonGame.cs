@@ -23,7 +23,9 @@ public class DragonGame : MonoBehaviour {
 		Basics.assert(!instance);
 		instance = this;
 
-		maxTileNeighborDistance = 1.1f * Mathf.Sqrt(2 * Mathf.Pow(tileWidth, 2));
+		//maxTileNeighborDistance = 1.1f * Mathf.Sqrt(2 * Mathf.Pow(tileWidth / 2, 2));
+		// Wait, tiles aren't aligned like that. Screw Pythagoras
+		maxTileNeighborDistance = 1.1f * tileWidth / 2;;
 	}
 
 	public void EndTurn() {
@@ -76,7 +78,7 @@ public class DragonGame : MonoBehaviour {
 
 			// If tile is dug, reveal neighbors, else just reveal itself
 			if (current.dug) {
-				foreach (var n in tile.neighbors) {
+				foreach (var n in current.neighbors) {
 					if (!discovered.Contains(n)) {
 						discovered.Add(n);
 						toVisit.Add(n);
